@@ -17,6 +17,11 @@
 
     // Declare a constant named 'z' using 'const' and assign it the value 20
 
+    var x = 10;
+    let y = 5;
+    const z = 20;
+  
+
     // TODO 2: Perform arithmetic operations
     // Add 'x' and 'y' and store the result in a new variable 'sum'
 
@@ -25,6 +30,16 @@
     // Multiply 'x' and 'z' and store the result in a new variable 'product'
 
     // Divide 'z' by 'y' and store the result in a new variable 'quotient'
+
+    let sum = x + y;
+    let difference = x - y;
+    let product = x * z;
+    let quotient = z / y;
+
+    console.log("Sum",sum);
+    console.log("Difference",difference);
+    console.log("Product",product);
+    console.log("Quotient",quotient);
 
     // TODO 3: Use string methods
     // Declare two string variables 'greeting' with value "Hello" and 'name' with value "Student"
@@ -37,6 +52,16 @@
 
     // Convert 'name' to lowercase and log the result
 
+    let greeting = "Hello";
+    let name = "Student";
+
+    let message = greeting + " " + name;
+
+    console.log("Message",message);
+    console.log("Length of message:", message.length);
+    console.log("Greeting uppercase:",greeting.toUpperCase());
+    console.log("Name lowercase:",name.toLowerCase());
+
     // TODO 4: Use comparison and logical operators
     // Compare if 'x' is greater than 'y' and log the result (true/false)
 
@@ -46,6 +71,11 @@
 
     // Use the OR (||) operator to check if 'x' is less than 'y' OR 'z' is greater than 'y', and log the result
     
+    console.log("x > y:", x > y);
+    console.log("x === z:", x === z);
+    console.log("x > y && z > x:", (x > y) && (z > x));
+    console.log("x < y || z > y:", (x < y) || (z > y));
+
     // TODO 5: Try using more string methods
     // Extract and log a substring from 'message' (first 5 characters)
 

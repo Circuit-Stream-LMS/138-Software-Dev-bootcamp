@@ -5,7 +5,7 @@
 // Example: A function to greet a user
 function greetUser(name) {
     console.log("Hello, " + name + "!");
-}
+};
 
 // Calling the function
 greetUser("Alice");
@@ -19,7 +19,7 @@ greetUser("Bob");
 // Example: A function to calculate the square of a number
 function square(number) {
     return number * number;
-}
+};
 
 // Calling the function and storing the result
 let result = square(5);
