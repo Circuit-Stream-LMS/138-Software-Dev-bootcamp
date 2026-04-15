@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Events Example (DOM Manipulation)</title>
+</head>
+<body>
+    <h1>JavaScript Events - DOM Manipulation</h1>
+    
+    <!-- Click Event -->
+    <button id="addButton">Add Item</button>
+    
+    <!-- Mouse Over Event -->
+    <div id="hoverArea">Hover over me!</div>
+    
+    <!-- Input Event -->
+    <input type="text" id="textInput" placeholder="Type something here..." />
+    <p id="textOutput">Waiting for input...</p>
+    
+    <!-- Double Click Event -->
+    <button id="doubleClickButton">Double Click Me!</button>
+    <ul id="itemList">
+        <li>Initial Item</li>
+    </ul>
+
+    <script>
+        // Click Event: Add a new item to the list
+        const addButton = document.getElementById('addButton');
+        addButton.addEventListener('click', function() {
+            const list = document.getElementById('itemList');
+            const newItem = document.createElement('li');
+            newItem.textContent = 'New List Item';
+            list.appendChild(newItem);
+            alert('New item added!');
+        });
+
+        // Mouse Over Event: Change the text inside the div
+        const hoverArea = document.getElementById('hoverArea');
+        hoverArea.addEventListener('mouseover', function() {
+            hoverArea.textContent = 'You hovered over me!';
+        });
+        hoverArea.addEventListener('mouseout', function() {
+            hoverArea.textContent = 'Hover over me!';
+        });
+
+        // Input Event: Update text as the user types
+        const textInput = document.getElementById('textInput');
+        const textOutput = document.getElementById('textOutput');
+        textInput.addEventListener('input', function() {
+            textOutput.textContent = 'You typed: ' + textInput.value;
+        });
+
+        // Double Click Event: Remove the last item from the list
+        const doubleClickButton = document.getElementById('doubleClickButton');
+        doubleClickButton.addEventListener('dblclick', function() {
+            const list = document.getElementById('itemList');
+            const lastItem = list.lastElementChild;
+            if (lastItem) {
+                list.removeChild(lastItem);
+                alert('Last item removed!');
+            } else {
+                alert('No items left to remove!');
+            }
+        });
+    </script>
+</body>
+</html>
