@@ -22,16 +22,36 @@
         // TODO: Implement Toggle Text Color functionality
         // 1. Select the button ('toggleTextColorButton') and add a click event listener.
         // 2. In the event handler, toggle the text color of the 'pageTitle' between red and black each time the button is clicked.
-       
+       const toggleTextColorButton = document.getElementById('toggleTextColorButton');
+       const pageTitle = document.getElementById('pageTitle');
+         toggleTextColorButton.addEventListener('click', function() {
+              if (pageTitle.style.color === 'red') {
+                pageTitle.style.color = 'black';
+              } else {
+                pageTitle.style.color = 'red';
+              }
+            });
+
 
         // TODO: Implement Border Style Change on Click
         // 1. Select the 'borderDiv' and add a click event listener to it.
         // 2. In the event handler, change the border style to dashed if it's solid, and back to solid if it's dashed.
+        const borderDiv = document.getElementById('borderDiv');
+        borderDiv.addEventListener('click', function() {
+            if (borderDiv.style.borderStyle === 'solid') {
+                borderDiv.style.borderStyle = 'dashed';
+            } else {
+                borderDiv.style.borderStyle = 'solid';
+            }
+        });
 
         // TODO: Implement Font Size Adjustment
         // 1. Select the range input ('fontSizeSlider') and add an input event listener.
         // 2. In the event handler, update the font size of 'pageTitle' based on the slider's value.
-       
+        const fontSizeSlider = document.getElementById('fontSizeSlider');
+        fontSizeSlider.addEventListener('input', function() {
+            pageTitle.style.fontSize = fontSizeSlider.value + 'px';
+        });
     </script>
 </body>
 </html>
