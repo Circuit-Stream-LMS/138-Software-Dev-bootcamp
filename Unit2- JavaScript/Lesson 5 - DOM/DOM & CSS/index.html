@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOM and CSS Manipulation</title>
+</head>
+<body>
+    <h1>Change My Style!</h1>
+    
+    <!-- Button to Change Heading Style -->
+    <button id="styleButton">Change Heading Style</button>
+    
+    <!-- Div for Mouse Hover Event -->
+    <div id="hoverDiv" style="width: 200px; height: 100px; border: 2px solid black; margin: 20px 0;">
+        Hover over me!
+    </div>
+    
+    <!-- Input Field for Changing Background Color -->
+    <input type="color" id="colorInput" />
+    <label for="colorInput">Select a background color</label>
+    
+    <script>
+        // Click Event: Change Heading Style
+        const styleButton = document.getElementById('styleButton');
+        styleButton.addEventListener('click', function() {
+            const heading = document.querySelector('h1');
+            heading.style.color = 'blue';
+            heading.style.fontSize = '2.5rem';
+            heading.style.fontFamily = 'Arial, sans-serif';
+            alert('Heading style changed!');
+        });
+
+        // Mouse Over Event: Change Div Background Color
+        const hoverDiv = document.getElementById('hoverDiv');
+        hoverDiv.addEventListener('mouseover', function() {
+            hoverDiv.style.backgroundColor = 'lightgreen';
+        });
+
+        hoverDiv.addEventListener('mouseout', function() {
+            hoverDiv.style.backgroundColor = ''; // Reset to default
+        });
+
+        // Input Event: Change Body Background Color
+        const colorInput = document.getElementById('colorInput');
+        colorInput.addEventListener('input', function() {
+            document.body.style.backgroundColor = colorInput.value;
+        });
+    </script>
+</body>
+</html>

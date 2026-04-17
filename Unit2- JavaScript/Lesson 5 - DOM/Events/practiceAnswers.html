@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRUD and Events Practice - Task Manager</title>
+</head>
+<body>
+    <h1>Task Manager</h1>
+    
+    <!-- Input and Button for Adding Tasks -->
+    <input type="text" id="taskInput" placeholder="Enter a new task" />
+    <button id="addTaskButton">Add Task</button>
+    
+    <!-- Task List Display -->
+    <ul id="taskList">
+        <!-- Tasks will be added here dynamically -->
+    </ul>
+    
+    <!-- Button to Clear All Tasks -->
+    <button id="clearAllButton">Clear All Tasks</button>
+
+    <script>
+        const taskInput = document.getElementById('taskInput');
+        const addTaskButton = document.getElementById('addTaskButton');
+        const taskList = document.getElementById('taskList');
+        const clearAllButton = document.getElementById('clearAllButton');
+
+        // Add Task Functionality
+        addTaskButton.addEventListener('click', () => {
+            const taskValue = taskInput.value.trim(); // Trim to avoid spaces only
+            if (taskValue === '') {
+                alert('Please enter a task.');
+                return;
+            }
+
+            // Create the 'li' element
+            const taskItem = document.createElement('li');
+            taskItem.textContent = taskValue;
+
+            // Add Delete Button
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.style.marginLeft = '10px';
+            deleteButton.addEventListener('click', () => {
+                taskList.removeChild(taskItem);
+            });
+            taskItem.appendChild(deleteButton);
+
+            // Add Update Functionality
+            taskItem.addEventListener('dblclick', () => {
+                const updatedTask = prompt('Update your task:', taskItem.firstChild.textContent);
+                if (updatedTask !== null) {
+                    taskItem.firstChild.textContent = updatedTask.trim();
+                }
+            });
+
+            // Append the task to the list
+            taskList.appendChild(taskItem);
+
+            // Clear the input field
+            taskInput.value = '';
+        });
+
+        // Clear All Tasks Functionality
+        clearAllButton.addEventListener('click', () => {
+            taskList.innerHTML = ''; // Removes all children of the taskList
+        });
+    </script>
+</body>
+</html>
