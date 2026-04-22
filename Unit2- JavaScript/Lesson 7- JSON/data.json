@@ -1,0 +1,10 @@
+{
+  "animal": "Elephant",
+  "city": "Tokyo",
+  "year": 2024,
+  "isRainy": false,
+  "piValue": 3.14159,
+  "colors": ["Red", "Blue", "Green"],
+  "randomFact": "Honey never spoils.",
+  "nullValue": null
+}
