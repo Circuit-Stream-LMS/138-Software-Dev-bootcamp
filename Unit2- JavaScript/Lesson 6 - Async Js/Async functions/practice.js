@@ -7,6 +7,12 @@ function fetchUserData(userId) {
       // TODO: Complete this logic to simulate a valid or invalid userId
       // If userId is 1, resolve with a user object, e.g., { userId: 1, name: "John Doe" }
       // If userId is not 1, reject with an error message, e.g., "User not found"
+      
+      if (userId === 1) {
+        resolve({ userId: 1, name: "John Doe" });
+      } else {
+        reject("User not found");
+      }
     }, 1000); // Simulate a 1-second delay
   });
 }
@@ -16,6 +22,13 @@ function getUserData(userId) {
   // TODO: Use fetchUserData with the provided userId
   // Use .then() to log the user data if the promise resolves successfully
   // Use .catch() to log the error message if the promise rejects
+  fetchUserData(userId)
+  .then((user) => {
+    console.log("User data:", user);
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
 }
 
 // 3. Test the function with a valid userId (1)
