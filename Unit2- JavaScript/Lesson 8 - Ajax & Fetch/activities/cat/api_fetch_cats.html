@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch a Cat!</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+      img {
+        display: block; /* Prevents extra space below image */
+        max-width: 400px;
+        height: auto; /* Maintain aspect ratio */
+        margin-top: 20px;
+        background-color: #ddd; /* Placeholder background */
+        min-height: 200px; /* Placeholder height */
+      }
+      .container {
+        text-align: center;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Random Cat Fetcher</h1>
+      <button id="get-cat-button">Get Random Cat</button>
+      <img
+        id="cat-image"
+        src=""
+        alt="A randomly fetched cat image will appear here."
+      />
+    </div>
+
+    <script>
+      const getCatButton = document.getElementById("get-cat-button");
+      const catImage = document.getElementById("cat-image");
+      const apiUrl = "https://cataas.com/cat?json=true";
+      const baseUrl = "https://cataas.com";
+
+      getCatButton.addEventListener("click", () => {
+        console.log("Fetching cat...");
+        catImage.src = ""; // Clear previous image
+        catImage.alt = "Loading cat...";
+
+        // --- Student Task: Fetch API Call ---
+        // 1. Use the fetch() function to make a request to the `apiUrl`.
+
+        // 2. Add a .then() block to handle the response.
+        //    - Check if the response `ok` property is true. If not, throw an error.
+        //    - If the response is ok, parse the response body as JSON using `response.json()`.
+
+        // 3. Add another .then() block to handle the parsed JSON data.
+        //    - Check if the `data` object has a `url` property.
+        //    - If it does, construct the full image URL: `baseUrl + data.url`.
+        //    - Set the `src` attribute of the `catImage` element to the full image URL.
+        //    - Set the `alt` attribute of the `catImage` to "A randomly fetched cat".
+        //    - If there's no `url` property, throw an error.
+
+        // 4. Add a .catch() block to handle any errors that occurred during the fetch process.
+        //    - Log the error to the console using `console.error()`.
+        //    - Set the `alt` attribute of the `catImage` to "Failed to load cat image.".
+        // --- End Student Task ---
+      });
+    </script>
+  </body>
+</html>
