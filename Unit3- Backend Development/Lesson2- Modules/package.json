@@ -1,0 +1,21 @@
+{
+  "name": "lesson2-modules",
+  "version": "1.0.0",
+  "description": "Lesson 2 - Modules and NPM comprehensive examples",
+  "scripts": {
+    "start": "node pathExamples.js",
+    "dev": "nodemon pathExamples.js",
+    "path-demo": "node pathExamples.js",
+    "inquirer-demo": "node Npm.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^11.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
