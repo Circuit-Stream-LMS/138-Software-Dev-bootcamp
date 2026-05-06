@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Hello World</h1>
+    <button id="delay">Delay</button>
+    <h2 id="time">0</h2>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <script>
+      // 1. grab the HTML
+      const delayBtn = document.getElementById("delay");
+      const timeElem = document.getElementById("time");
+      const startBtn = document.getElementById("start");
+      const stopBtn = document.getElementById("stop");
+
+      // global variables
+      let intervalId;
+
+      // 2. write functions
+      function delayedLog() {
+        // debugger;
+        // setTimeout takes 2 arguments
+        // 1: WHAT am I executing?
+        // 2: how LONG am I WAITING before I execute it? (in miliseconds)
+        // 2000 === wait for 2 seconds
+        setTimeout(() => {
+          // debugger;
+          console.log("I am executing after a 2 second delay");
+        }, 2000);
+      }
+
+      function startTime() {
+        if (!intervalId) {
+          intervalId = setInterval(() => {
+            // get the current number out of the time HTML element
+            const currentTime = Number(timeElem.textContent);
+            timeElem.textContent = currentTime + 1;
+            console.log(intervalId);
+          }, 1000);
+        } else {
+          console.log("Stopwatch already running!");
+        }
+      }
+
+      function stopTime() {
+        // clear any intervals if there is one
+        if (intervalId) {
+          // this shuts down the interval
+          clearInterval(intervalId);
+        }
+      }
+
+      // 3. setup listeners
+
+      delayBtn.addEventListener("click", delayedLog);
+      startBtn.addEventListener("click", startTime);
+      stopBtn.addEventListener("click", stopTime);
+
+
+      // console.log("first");
+      // setTimeout(() => {
+      //   console.log("timeout result 30");
+      // }, 30);
+      // setTimeout(() => {
+      //   console.log("timeout result 10");
+      // }, 10);
+      // setTimeout(() => {
+      //   console.log("timeout result 20");
+      // }, 20);
+      // console.log("third");
+    </script>
+  </body>
+</html>
