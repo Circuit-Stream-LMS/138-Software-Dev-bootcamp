@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Computers Learn to Think </title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fdf9f3;
+    --surface: #ffffff;
+    --border: #e8dfd0;
+    --text: #2a2015;
+    --text2: #5a4e3a;
+    --accent: #e67e22;
+    --accent2: #2980b9;
+    --green: #27ae60;
+    --purple: #8e44ad;
+    --red: #e74c3c;
+    --yellow: #f39c12;
+    --teal: #16a085;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  /* ─── HEADER ─── */
+  .page-header {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+    color: white;
+    padding: 52px 48px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '🧠';
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 100px;
+    opacity: 0.18;
+  }
+  .lesson-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+  .page-header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 34px;
+    font-weight: 900;
+    line-height: 1.2;
+    max-width: 600px;
+    margin-bottom: 12px;
+  }
+  .page-header .subtitle {
+    font-size: 17px;
+    opacity: 0.88;
+    max-width: 560px;
+  }
+
+  /* ─── NAV ─── */
+  .nav-pills {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    scrollbar-width: none;
+  }
+  .nav-pills::-webkit-scrollbar { display: none; }
+  .nav-pill {
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    color: var(--text2);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-pill:hover { color: var(--accent); }
+  .nav-pill.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ─── LAYOUT ─── */
+  .main { max-width: 860px; margin: 0 auto; padding: 44px 48px 80px; }
+  .section { margin-bottom: 64px; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-emoji {
+    font-size: 36px;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .section-header .section-sub {
+    font-size: 14px;
+    color: var(--text2);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  h3 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 36px 0 12px;
+  }
+  h3:first-of-type { margin-top: 0; }
+
+  p { margin-bottom: 14px; color: var(--text2); font-size: 15.5px; }
+  p strong { color: var(--text); font-weight: 700; }
+
+  ul, ol { padding-left: 22px; color: var(--text2); margin-bottom: 14px; }
+  li { margin-bottom: 8px; font-size: 15.5px; line-height: 1.65; }
+  li strong { color: var(--text); font-weight: 700; }
+
+  /* ─── BIG IDEA BOX ─── */
+  .big-idea {
+    background: linear-gradient(135deg, #fff8f0 0%, #fff3e6 100%);
+    border: 2px solid #f0c080;
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin: 20px 0;
+  }
+  .big-idea-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .big-idea p { color: var(--text); margin: 0; font-size: 16px; }
+  .big-idea p:not(:last-child) { margin-bottom: 10px; }
+
+  /* ─── STORY BOX ─── */
+  .story-box {
+    background: #f0f8ff;
+    border: 2px solid #b8d8f0;
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin: 20px 0;
+  }
+  .story-box-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+  .story-box p { color: #1a3a5a; margin: 0; font-size: 15.5px; }
+  .story-box p:not(:last-child) { margin-bottom: 10px; }
+
+  /* ─── REMEMBER BOX ─── */
+  .remember-box {
+    background: #f0fff4;
+    border: 2px solid #a8e6bc;
+    border-radius: 16px;
+    padding: 18px 24px;
+    margin: 20px 0;
+  }
+  .remember-box-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .remember-box p { color: #1a4a2a; margin: 0; font-size: 15.5px; }
+
+  /* ─── WATCH-OUT BOX ─── */
+  .watchout-box {
+    background: #fff8e6;
+    border: 2px solid #f0d080;
+    border-radius: 16px;
+    padding: 18px 24px;
+    margin: 20px 0;
+  }
+  .watchout-box-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 8px;
+  }
+  .watchout-box p { color: #5a3a0a; margin: 0; font-size: 15.5px; }
+
+  /* ─── STEP CARDS ─── */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .step-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .step-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(230,126,34,0.12); }
+  .step-emoji { font-size: 32px; margin-bottom: 10px; }
+  .step-num {
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .step-card h4 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .step-card p { font-size: 13.5px; color: var(--text2); margin: 0; }
+
+  /* ─── VISUAL BOX ─── */
+  .visual-box {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    margin: 20px 0;
+  }
+  .visual-box h4 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text2);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+  }
+
+  /* ─── CODE / FORMULA ─── */
+  .formula {
+    background: #1a1a2e;
+    color: #a8f0b8;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    margin: 14px 0;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  code {
+    background: #f0ebe0;
+    border: 1px solid #d8d0c0;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: #8e44ad;
+  }
+
+  /* ─── TOKEN STRIP ─── */
+  .token-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 18px;
+    background: #1a1a2e;
+    border-radius: 12px;
+    margin: 14px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+  }
+  .token {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .t1 { background: #6c3483; }
+  .t2 { background: #1a5276; }
+  .t3 { background: #0e6655; }
+  .t4 { background: #784212; }
+  .t5 { background: #922b21; }
+  .t6 { background: #1d5830; }
+  .t7 { background: #154360; }
+  .t8 { background: #7d6608; }
+
+  /* ─── NUMBER BADGE ─── */
+  .number-badge {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #a8f0b8;
+    padding: 4px 14px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* ─── VOCAB GRID ─── */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .vocab-item {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .vocab-word { font-family: 'Courier New', monospace; font-weight: 700; color: var(--text); font-size: 14px; }
+  .vocab-id   { font-family: 'Courier New', monospace; color: var(--accent); font-weight: 800; font-size: 13px; }
+
+  /* ─── EMBED ROWS ─── */
+  .embed-rows { margin: 16px 0; }
+  .embed-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  .embed-word {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    width: 120px;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .embed-vec {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #5a5750;
+    background: #f0ebe0;
+    padding: 5px 10px;
+    border-radius: 6px;
+    flex: 1;
+  }
+  .embed-tag {
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    background: var(--green);
+    padding: 3px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .embed-tag.far { background: var(--red); }
+
+  /* ─── DEMO EMBED ─── */
+  .demo-wrap {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .demo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: var(--text);
+    gap: 12px;
+  }
+  .demo-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: white;
+  }
+  .demo-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: 'Nunito', sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .demo-btn:hover { opacity: 0.85; }
+  .demo-btn.outline {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+  }
+  .demo-wrap iframe { display: block; width: 100%; border: none; }
+
+  /* ─── TRY IT ─── */
+  .try-it {
+    background: #f8f3ff;
+    border: 2px solid #c8a8e8;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .try-it-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 10px;
+  }
+  .try-it ul { color: #4a1a7a; margin: 0; }
+  .try-it li { font-size: 15px; }
+
+  /* ─── SUMMARY TABLE ─── */
+  .summary-table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 14px 0; border-radius: 12px; overflow: hidden; }
+  .summary-table th { background: #2c3e50; color: white; padding: 12px 16px; text-align: left; font-family: 'Nunito', sans-serif; font-weight: 800; }
+  .summary-table td { padding: 12px 16px; border: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  .summary-table td:first-child { font-weight: 700; color: var(--text); white-space: nowrap; font-size: 14px; }
+  .summary-table tr:nth-child(even) td { background: #faf7f2; }
+
+  /* ─── DEMO GRID ─── */
+  .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+  .demo-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .demo-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(230,126,34,0.1); }
+  .demo-card-header {
+    background: #2c3e50;
+    color: white;
+    padding: 12px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .demo-card-body { padding: 14px 16px; }
+  .demo-card-body p { font-size: 13.5px; margin-bottom: 12px; }
+
+  /* ─── OVERVIEW CARDS ─── */
+  .objectives-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 28px; }
+  .obj-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .obj-emoji { font-size: 24px; flex-shrink: 0; margin-top: 1px; }
+  .obj-card p { font-size: 14px; color: var(--text2); margin: 0; line-height: 1.5; }
+
+  /* ─── ANALOGY STRIP ─── */
+  .analogy-strip {
+    display: flex;
+    gap: 14px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .analogy-half {
+    flex: 1;
+    min-width: 200px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+  .analogy-half .label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .analogy-half h4 { font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+  .analogy-half p { font-size: 14px; color: var(--text2); margin: 0; }
+
+  /* ─── HILL VIZ ─── */
+  .hill-container { text-align: center; margin: 20px 0; }
+  .hill-container svg { max-width: 100%; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .page-header, .main { padding-left: 20px; padding-right: 20px; }
+    .nav-pills { padding-left: 16px; }
+    .page-header h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════════ -->
+<header class="page-header">
+  <div class="lesson-badge">Unit 4 · Foundations of AI — Lesson 2</div>
+  <h1>How Do Computers Actually Learn?</h1>
+</header>
+
+<nav class="nav-pills">
+  <a href="#overview"  class="nav-pill active">🗺 Overview</a>
+  <a href="#section1"  class="nav-pill">⛰ Gradient Descent</a>
+  <a href="#section2"  class="nav-pill">🔙 Backpropagation</a>
+  <a href="#section3"  class="nav-pill">🔤 Tokens</a>
+  <a href="#section4"  class="nav-pill">🌌 Embeddings</a>
+  <a href="#summary"   class="nav-pill">📋 Summary</a>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════════════════════════════════════════════════
+     OVERVIEW
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="overview">
+  <div class="section-header">
+    <div class="section-emoji">🗺</div>
+    <div>
+      <h2>What Are We Learning Today?</h2>
+      <div class="section-sub">Overview — 5 Big Ideas</div>
+    </div>
+  </div>
+
+  <p>AI systems like ChatGPT or Google's AI can write stories, answer questions, and hold conversations. But how did they <em>learn</em> to do this? It's not magic. It's math — and once you understand the core ideas, it all makes sense.</p>
+  <p>Today we'll learn 5 important concepts. Each one builds on the last:</p>
+
+  <div class="objectives-grid">
+    <div class="obj-card"><div class="obj-emoji">⛰</div><p><strong>Gradient Descent</strong> — How a computer figures out when it's wrong and slowly gets better</p></div>
+    <div class="obj-card"><div class="obj-emoji">🔙</div><p><strong>Backpropagation</strong> — How the computer figures out <em>which parts</em> caused the mistake</p></div>
+    <div class="obj-card"><div class="obj-emoji">🔤</div><p><strong>Tokens</strong> — How the computer reads words (it converts them to numbers first!)</p></div>
+    <div class="obj-card"><div class="obj-emoji">🌌</div><p><strong>Embeddings</strong> — How the computer understands that "cat" and "kitten" are related words</p></div>
+    <div class="obj-card"><div class="obj-emoji">🧩</div><p><strong>All Together</strong> — How these pieces combine so a computer can understand language</p></div>
+  </div>
+
+  <div class="big-idea">
+    <div class="big-idea-label">🌟 The Most Important Idea</div>
+    <p>Computers don't start out "smart." They start out <strong>completely wrong</strong>. Then, through a process of <strong>making guesses, measuring how wrong they are, and adjusting</strong>, they slowly get better. They do this millions and millions of times until they're really good. That process of getting better is called <strong>learning</strong>.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 1: GRADIENT DESCENT
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="section1">
+  <div class="section-header">
+    <div class="section-emoji">⛰</div>
+    <div>
+      <h2>Gradient Descent — How a Computer Gets Better</h2>
+      <div class="section-sub">Section 1 of 4</div>
+    </div>
+  </div>
+
+  <h3>First: What Does a Neural Network Actually Do?</h3>
+  <p>A neural network is a computer program that makes guesses. You give it some information, it spits out a prediction. Maybe it's "Is this email spam or not spam?" Maybe it's "What word should come next in this sentence?" Maybe it's "Is this photo a cat or a dog?"</p>
+  <p>The computer starts out knowing absolutely nothing. Its first guesses are basically random — like flipping a coin. So how does it go from "completely clueless" to "surprisingly smart"?</p>
+  <p>It has to <strong>learn from its mistakes</strong>. And it does this using a clever trick.</p>
+
+  <h3>What Are "Weights"?</h3>
+  <p>Inside a neural network are thousands (or millions!) of little numbers called <strong>weights</strong>. Think of each weight as a tiny dial or knob. When the computer is first created, all these dials are turned to random positions. The goal of training is to turn each dial to exactly the right position so the computer makes correct predictions.</p>
+
+  <div class="story-box">
+    <div class="story-box-label">🎛 Simple Analogy — Radio Knobs</div>
+    <p>Imagine you're trying to tune a radio to get clear sound. You have 1,000 knobs, and right now they're all turned to random positions — just static noise. You need to slowly adjust each knob until the music comes in clear. <strong>Training a neural network is like tuning a radio with a million knobs.</strong></p>
+    <p>The difference is: you can't see or hear what you're doing. You have to rely on a number that tells you "how wrong you are" to guide your hand.</p>
+  </div>
+
+  <h3>The "Score of Wrongness" — The Loss Function</h3>
+  <p>To know if the computer is getting better or worse, we need a way to measure how wrong it is at any moment. This measurement is called the <strong>loss</strong> (sometimes called the "error" or "cost").</p>
+  <p>Think of the loss like a score — but it's a score where <strong>lower is better</strong>. A loss of 0 means the computer is perfectly correct. A very high loss means it's very wrong.</p>
+
+  <div class="story-box">
+    <div class="story-box-label">🎯 Simple Example — Guessing a Number</div>
+    <p>Let's say the correct answer is <strong>10</strong>, and the computer guesses <strong>3</strong>. The error is 7 (pretty far off). If the computer guesses <strong>9</strong>, the error is 1 (much closer!). If the computer guesses <strong>10</strong>, the error is 0 — perfect!</p>
+    <p>In real AI, the formula used to calculate this kind of error is called <strong>Mean Squared Error (MSE)</strong>. It measures how far off each guess is, squares the difference (to make sure negative and positive errors don't cancel out), and finds the average. Don't worry too much about the math — the key idea is simple: <strong>the loss tells us how wrong we are, and we want to make it smaller.</strong></p>
+  </div>
+
+  <div class="visual-box">
+    <h4>📐 What the Math Looks Like</h4>
+    <div class="formula">Loss = average of (what the computer guessed  −  the correct answer)²
+
+For example:
+  Correct answer: 10
+  Computer guessed: 3
+  Difference: 10 - 3 = 7
+  Squared: 7² = 49
+  Loss = 49  ← quite high, the computer was quite wrong
+
+  Computer guessed: 9
+  Difference: 10 - 9 = 1
+  Squared: 1² = 1
+  Loss = 1  ← much better!
+
+  Computer guessed: 10
+  Difference: 10 - 10 = 0
+  Loss = 0  ← perfect!</div>
+  </div>
+
+  <h3>Gradient Descent — Walking Downhill Blindfolded</h3>
+  <p>Now we know how to measure "how wrong" the computer is. But how does it actually get <em>less</em> wrong? This is where <strong>gradient descent</strong> comes in.</p>
+  <p>Gradient descent is a strategy for finding the lowest possible loss. The name sounds scary, but the idea is simple:</p>
+
+  <div class="story-box">
+    <div class="story-box-label">⛰ The Hill Analogy — This Is All You Need to Remember</div>
+    <p>Imagine you're blindfolded, standing on a hilly landscape, and your goal is to find the lowest point in the valley. You can't see anything. But you can feel the ground under your feet — you can feel which direction slopes downhill.</p>
+    <p>Your strategy: <strong>feel which direction is downhill, take one small step that way, then repeat.</strong> Step by step, you'll eventually reach the bottom of the valley.</p>
+    <p>That's exactly what gradient descent does, except instead of a physical hill, it's navigating a mathematical landscape where the "height" at any point represents how wrong the computer is. The goal is to find the lowest point — the smallest possible loss.</p>
+  </div>
+
+  <!-- SVG Hill Diagram -->
+  <div class="hill-container">
+    <svg viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg" style="max-width:640px;border-radius:14px;background:#f0f4ff;border:2px solid #c8d8f0;">
+      <!-- Hill curve -->
+      <defs>
+        <linearGradient id="hillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#7fa8d0;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#d0e8f8;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <path d="M 0 280 Q 80 30 200 60 Q 300 90 320 230 Q 340 200 400 80 Q 480 10 640 50 L 640 280 Z" fill="url(#hillGrad)" stroke="#5a88b0" stroke-width="2"/>
+      <!-- Valley bottom -->
+      <circle cx="320" cy="232" r="10" fill="#e74c3c" stroke="white" stroke-width="2"/>
+      <text x="320" y="265" text-anchor="middle" font-family="Nunito" font-size="11" font-weight="800" fill="#c0392b">LOWEST POINT</text>
+      <text x="320" y="278" text-anchor="middle" font-family="Nunito" font-size="10" fill="#c0392b">(smallest loss)</text>
+      <!-- Person starting high -->
+      <circle cx="140" cy="75" r="12" fill="#f39c12" stroke="white" stroke-width="2"/>
+      <text x="140" y="55" text-anchor="middle" font-family="Nunito" font-size="11" font-weight="800" fill="#784212">START</text>
+      <text x="140" y="45" text-anchor="middle" font-family="Nunito" font-size="10" fill="#784212">(random start)</text>
+      <!-- Arrows showing steps -->
+      <path d="M 155 85 Q 185 115 215 140" stroke="#f39c12" stroke-width="3" fill="none" stroke-dasharray="6,3" marker-end="url(#arr)"/>
+      <path d="M 220 145 Q 250 175 278 205" stroke="#e67e22" stroke-width="3" fill="none" stroke-dasharray="6,3" marker-end="url(#arr)"/>
+      <path d="M 282 210 Q 300 222 310 230" stroke="#d35400" stroke-width="3" fill="none" stroke-dasharray="6,3" marker-end="url(#arr)"/>
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M 0 0 L 8 4 L 0 8 Z" fill="#e67e22"/>
+        </marker>
+      </defs>
+      <!-- Step labels -->
+      <text x="195" y="130" font-family="Nunito" font-size="11" font-weight="700" fill="#784212">Step 1</text>
+      <text x="252" y="180" font-family="Nunito" font-size="11" font-weight="700" fill="#784212">Step 2</text>
+      <text x="285" y="222" font-family="Nunito" font-size="11" font-weight="700" fill="#784212">Step 3</text>
+      <!-- Labels -->
+      <text x="60" y="30" font-family="Nunito" font-size="13" font-weight="800" fill="#2c3e50">HIGH LOSS = Very Wrong</text>
+      <text x="60" y="46" font-family="Nunito" font-size="11" fill="#5a6a7a">(computer is bad at guessing here)</text>
+    </svg>
+  </div>
+
+  <h3>What Is a "Gradient"?</h3>
+  <p>The word "gradient" just means <strong>slope</strong>. If you're standing on a hill and you can feel it's steeper on your left than your right, that's you sensing the gradient. In math, the gradient tells the computer exactly how much the loss will change if it adjusts any particular weight by a tiny amount.</p>
+  <p>More specifically: the gradient tells us which direction makes things <em>worse</em>. So the computer goes the <em>opposite</em> direction — downhill — to make things better.</p>
+
+  <h3>The Learning Rate — How Big of a Step?</h3>
+  <p>Every step the computer takes, it moves its weights a little bit in the downhill direction. But how much should it move? This is controlled by a setting called the <strong>learning rate</strong>.</p>
+
+  <div class="analogy-strip">
+    <div class="analogy-half">
+      <div class="label">⚠️ Learning Rate Too High</div>
+      <h4>Taking Giant Leaps 🏃</h4>
+      <p>The computer overshoots the valley and ends up on the other side! It keeps bouncing back and forth and never settles at the bottom. Training goes badly.</p>
+    </div>
+    <div class="analogy-half">
+      <div class="label">⚠️ Learning Rate Too Low</div>
+      <h4>Tiny Baby Steps 🐢</h4>
+      <p>The computer makes progress, but so slowly that training takes forever. Possible, but painfully inefficient.</p>
+    </div>
+    <div class="analogy-half">
+      <div class="label">✅ Learning Rate Just Right</div>
+      <h4>Steady Steps 🚶</h4>
+      <p>The computer makes steady progress, reliably moving toward the bottom. Training works well and finishes in reasonable time.</p>
+    </div>
+  </div>
+
+  <h3>A Concrete Walk-Through Example</h3>
+  <p>Let's see gradient descent work on the simplest possible example: a computer trying to learn the rule <code>y = 2x</code> (if x is 3, then y should be 6).</p>
+
+  <div class="visual-box">
+    <h4>📊 Step-By-Step Gradient Descent</h4>
+    <div class="formula">The computer is trying to learn the rule: output = weight × input
+(The correct weight should be 2.0)
+
+─── START ────────────────────────────────────────────────────
+Computer starts with random weight:   weight = 0.5  (a random guess)
+
+─── ITERATION 1 ──────────────────────────────────────────────
+Input data:   x = [1, 2, 3]
+Correct outputs:  y = [2, 4, 6]    (because y = 2x)
+
+Computer's guesses using weight 0.5:
+  0.5 × 1 = 0.5   (correct was 2,  off by 1.5)
+  0.5 × 2 = 1.0   (correct was 4,  off by 3.0)
+  0.5 × 3 = 1.5   (correct was 6,  off by 4.5)
+
+Loss = big number (very wrong!)
+
+Gradient says: "Increase the weight — it's too small"
+Weight update:   0.5  →  1.1   (getting closer to 2!)
+
+─── AFTER MANY ITERATIONS ────────────────────────────────────
+  weight ≈ 2.0  ✓  The computer figured it out!</div>
+  </div>
+
+  <div class="remember-box">
+    <div class="remember-box-label">✅ Key Takeaway</div>
+    <p><strong>Gradient descent is how the computer slowly improves.</strong> It measures how wrong it is (the loss), figures out which direction to adjust each weight (the gradient), then takes a small step in the right direction (the learning rate controls how small). Repeat millions of times → trained AI.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 2: BACKPROPAGATION
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="section2">
+  <div class="section-header">
+    <div class="section-emoji">🔙</div>
+    <div>
+      <h2>Backpropagation — Finding Who's to Blame</h2>
+      <div class="section-sub">Section 2 of 4</div>
+    </div>
+  </div>
+
+  <h3>Quick Recap: Layers in a Neural Network</h3>
+  <p>Real neural networks aren't just one weight. They're built in <strong>layers</strong>. Information goes in at the first layer, gets processed, gets passed to the next layer, processed again, then the next layer... until finally an answer comes out at the last layer.</p>
+  <p>You can think of it like a factory assembly line with many stations. Each station does a little bit of work and passes the result to the next one.</p>
+
+  <div class="story-box">
+    <div class="story-box-label">🏭 Assembly Line Analogy</div>
+    <p>Imagine a toy factory with 5 stations on an assembly line. At the end, a defective toy comes out. Something went wrong — but <em>which station</em> caused the problem?</p>
+    <p>You'd start at station 5 and work backwards. Station 5 is fine. Station 4 is fine. Station 3 is where the problem started — that station is putting the wheel on upside down.</p>
+    <p><strong>Backpropagation does exactly this for a neural network.</strong> When the final answer is wrong, it works backwards through the layers to figure out which weights in which layers contributed to the mistake — and by how much.</p>
+  </div>
+
+  <h3>The Problem With Deep Networks</h3>
+  <p>Remember gradient descent? It adjusts weights based on how much they contributed to the error. Easy for a simple model with one or two weights.</p>
+  <p>But what if the network has 10 layers and millions of weights? A weight in layer 1 affects layer 2, which affects layer 3, which affects layer 4... which eventually affects the final answer. How do you figure out how much layer 1's weights are "responsible" for the final error?</p>
+  <p>You can't just look at the final error and magically know which early weight caused it. You have to trace backward, layer by layer. That tracing process is called <strong>backpropagation</strong>.</p>
+
+  <h3>What Backpropagation Actually Does</h3>
+  <p>The word "backpropagation" literally means "propagate (spread) backwards." Here's what happens:</p>
+  <ol>
+    <li>The computer makes a prediction (this is called the <strong>forward pass</strong> — information moves forward through the layers)</li>
+    <li>We calculate the loss — how wrong was the answer?</li>
+    <li>We send that error signal <strong>backward</strong> through all the layers (the <strong>backward pass</strong>)</li>
+    <li>As the error signal passes through each layer, we calculate: "how much did <em>this</em> layer's weights contribute to the final mistake?"</li>
+    <li>Now every weight in every layer has its own gradient — its personal share of the blame</li>
+    <li>Gradient descent uses all those gradients to update all the weights</li>
+  </ol>
+
+  <div class="big-idea">
+    <div class="big-idea-label">💡 The Simple Version</div>
+    <p><strong>Backpropagation + Gradient Descent work as a team.</strong> Backpropagation figures out how much each weight is to blame. Gradient descent uses that information to fix each weight a little bit. Together, they are how the entire neural network learns.</p>
+  </div>
+
+  <h3>The Four Steps of Every Training Cycle</h3>
+  <p>Every time the computer learns from one batch of data, it goes through these four steps. This cycle repeats millions of times during training:</p>
+
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-emoji">➡️</div>
+      <div class="step-num">Step 1</div>
+      <h4>Forward Pass</h4>
+      <p>Input data travels through the network layer by layer. A prediction comes out the other end.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-emoji">📏</div>
+      <div class="step-num">Step 2</div>
+      <h4>Calculate Loss</h4>
+      <p>Compare the prediction to the correct answer. How wrong was the computer? This gives us the loss number.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-emoji">🔙</div>
+      <div class="step-num">Step 3</div>
+      <h4>Backward Pass</h4>
+      <p>The error signal travels backwards through the layers. Every weight gets a gradient — its "share of the blame."</p>
+    </div>
+    <div class="step-card">
+      <div class="step-emoji">🔧</div>
+      <div class="step-num">Step 4</div>
+      <h4>Update Weights</h4>
+      <p>Gradient descent nudges every weight a tiny bit in the direction that reduces the loss. Then go back to step 1!</p>
+    </div>
+  </div>
+
+  <h3>Epochs and Batches — How Long Does This Take?</h3>
+  <p>Training a neural network doesn't happen with just one example. It uses thousands or millions of examples. Here are two important words:</p>
+
+  <div class="visual-box">
+    <h4>📚 Epochs and Batches Explained</h4>
+    <p style="margin-bottom:16px"><strong>🗂 Batch:</strong> Instead of showing the computer one example at a time (slow!) or all examples at once (needs too much memory!), we divide the data into small chunks called <strong>batches</strong>. The computer processes one batch, updates its weights, then moves to the next batch.</p>
+    <p style="margin-bottom:16px"><strong>🔄 Epoch:</strong> One complete pass through <em>all</em> the training data is called an <strong>epoch</strong>. If you have 60,000 training examples and a batch size of 100, that's 600 batches per epoch. After all 600 batches, one epoch is done.</p>
+    <p><strong>Training usually takes many epochs.</strong> It's common to run 10, 50, or even 100+ epochs. Each epoch, the model gets a little better. Think of it like a student reading the same textbook 50 times — each time they absorb a little more.</p>
+  </div>
+
+  <div class="visual-box">
+    <h4>💻 What the Training Loop Looks Like</h4>
+    <div class="formula">for each epoch:       ← one full pass through all training data
+    for each batch:   ← small chunk of data
+
+        # STEP 1: Forward pass — make a prediction
+        prediction = network(input_data)
+
+        # STEP 2: Calculate loss — how wrong are we?
+        loss = compare(prediction, correct_answer)
+
+        # STEP 3: Backward pass — figure out who's to blame
+        gradients = backpropagation(loss)
+
+        # STEP 4: Update weights — fix things a little bit
+        for each weight:
+            weight = weight - (learning_rate × gradient)
+
+    print("One epoch done! Loss is now:", loss)</div>
+  </div>
+
+  <h3>Watching It Happen Live — TensorFlow Playground</h3>
+  <p>TensorFlow Playground is a free interactive tool that lets you watch a neural network train in real time, right in your browser. You can see the loss go down and watch the network figure out patterns in the data.</p>
+
+  <div class="watchout-box">
+    <div class="watchout-box-label">⚡ What Is TensorFlow?</div>
+    <p>TensorFlow is a free software library made by Google that lets programmers build and train neural networks. "TensorFlow Playground" is a simplified visual version of it that runs in your browser — no coding required. You just click buttons and watch the AI learn. The word "tensor" refers to a type of mathematical object (basically a grid of numbers), and "flow" refers to how data flows through the network.</p>
+  </div>
+
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <div class="demo-title">🕹 TensorFlow Playground — Watch a Network Learn Live</div>
+      <a href="https://playground.tensorflow.org/" target="_blank" class="demo-btn outline">Open Full Screen ↗</a>
+    </div>
+    <iframe src="https://playground.tensorflow.org/" height="520" loading="lazy" title="TensorFlow Playground"></iframe>
+  </div>
+
+  <div class="try-it">
+    <div class="try-it-label">🎮 Things to Try in TensorFlow Playground</div>
+    <ul>
+      <li><strong>Press the play button (▶)</strong> — watch the neural network start training. The colorful pattern in the middle changes as the network learns.</li>
+      <li><strong>Look at the "Epoch" counter</strong> at the top left — it counts how many times the network has been through the training data.</li>
+      <li><strong>Watch the "Loss" chart</strong> at the top right — you should see it slowly trend downward as the network improves.</li>
+      <li><strong>Change the Learning Rate</strong> — try a very high number (10). Does it learn? Try a very low number (0.001). Does it still work? How does it compare?</li>
+      <li><strong>Look at the boxes inside the network</strong> — each box shows what pattern that part of the network has learned to detect.</li>
+    </ul>
+  </div>
+
+  <div class="demo-grid" style="margin-top:20px">
+    <div class="demo-card">
+      <div class="demo-card-header">ConvNetJS 2D Classifier</div>
+      <div class="demo-card-body">
+        <p>Another live training demo — simpler version, great for watching the loss number drop in real time as the network learns to separate the coloured dots.</p>
+        <a href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html" target="_blank" class="demo-btn">Open Demo ↗</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-card-header">3Blue1Brown — Backpropagation Video</div>
+      <div class="demo-card-body">
+        <p>A beautifully animated YouTube video that walks through gradient descent and backpropagation with clear visuals. Highly recommended if you want to go deeper.</p>
+        <a href="https://youtu.be/NrO20Jb-hy0" target="_blank" class="demo-btn">Watch on YouTube ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 3: TOKENS
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="section3">
+  <div class="section-header">
+    <div class="section-emoji">🔤</div>
+    <div>
+      <h2>Tokens — How Computers Read Words</h2>
+      <div class="section-sub">Section 3 of 4</div>
+    </div>
+  </div>
+
+  <h3>The Big Problem: Computers Only Understand Numbers</h3>
+  <p>Everything we've talked about so far — weights, losses, gradients — they're all just numbers. A neural network takes in numbers, multiplies them by weights (also numbers), and outputs numbers. That's it.</p>
+  <p>But <strong>language is not numbers.</strong> The sentence "The cat sat on the mat" is a sequence of letters and spaces. How does a computer like ChatGPT work with text at all?</p>
+  <p>The answer: <strong>before feeding text into a neural network, we convert it into numbers.</strong> The way we do this is through something called <strong>tokenization</strong>.</p>
+
+  <h3>What Is a Token?</h3>
+  <p>A <strong>token</strong> is a chunk of text that the computer treats as one single unit. Tokens are not always exactly one word. They can be:</p>
+  <ul>
+    <li>A whole common word: <code>cat</code>, <code>the</code>, <code>run</code></li>
+    <li>Part of a word: <code>un</code> from "unfamiliar", <code>ation</code> from "tokenization"</li>
+    <li>Punctuation: <code>.</code> or <code>!</code></li>
+    <li>A space + word: <code> quick</code> (notice the space before "quick")</li>
+  </ul>
+
+  <p>Every token gets assigned a unique number, called an <strong>ID</strong>. When you type text into ChatGPT, the very first thing that happens is your text gets converted, word by word (and sometimes part-of-word by part-of-word), into a list of these ID numbers.</p>
+
+  <h3>Seeing It in Action — "The quick brown fox jumps"</h3>
+  <p>This common sentence can be split into 5 tokens — one for each word:</p>
+
+  <div class="token-strip">
+    <span class="token t1">The</span>
+    <span class="token t2">&nbsp;quick</span>
+    <span class="token t3">&nbsp;brown</span>
+    <span class="token t4">&nbsp;fox</span>
+    <span class="token t5">&nbsp;jumps</span>
+  </div>
+
+  <p>But what about a rare or technical word like "backpropagation"? That word is uncommon enough that the computer doesn't have it as a single token. Instead it gets split into smaller pieces it <em>does</em> know:</p>
+
+  <div class="token-strip">
+    <span class="token t1">back</span>
+    <span class="token t2">prop</span>
+    <span class="token t3">ag</span>
+    <span class="token t4">ation</span>
+    <span class="token t6">&nbsp;is</span>
+    <span class="token t7">&nbsp;a</span>
+    <span class="token t5">&nbsp;key</span>
+    <span class="token t8">&nbsp;algorithm</span>
+  </div>
+
+  <h3>The Vocabulary — The Computer's Dictionary</h3>
+  <p>The complete set of all tokens the computer knows is called its <strong>vocabulary</strong>. It's like a giant dictionary where every entry has a word (or word-piece) and a number:</p>
+
+  <div class="vocab-grid">
+    <div class="vocab-item"><span class="vocab-word">the</span><span class="vocab-id">ID: 1</span></div>
+    <div class="vocab-item"><span class="vocab-word">cat</span><span class="vocab-id">ID: 2</span></div>
+    <div class="vocab-item"><span class="vocab-word">sat</span><span class="vocab-id">ID: 3</span></div>
+    <div class="vocab-item"><span class="vocab-word">on</span><span class="vocab-id">ID: 4</span></div>
+    <div class="vocab-item"><span class="vocab-word">mat</span><span class="vocab-id">ID: 5</span></div>
+    <div class="vocab-item"><span class="vocab-word">dog</span><span class="vocab-id">ID: 6</span></div>
+    <div class="vocab-item"><span class="vocab-word">ran</span><span class="vocab-id">ID: 7</span></div>
+    <div class="vocab-item"><span class="vocab-word">fast</span><span class="vocab-id">ID: 8</span></div>
+  </div>
+
+  <p>So the sentence "the cat sat on the mat" becomes this list of numbers:</p>
+  <p style="text-align:center;margin:18px 0"><span class="number-badge">[1, 2, 3, 4, 1, 5]</span></p>
+  <p>Notice how "the" appears twice and gets the same ID both times (ID: 1). The computer just sees: <em>1, 2, 3, 4, 1, 5</em> — a list of numbers. Now it can work with it!</p>
+
+  <h3>Why Not Just Use Whole Words?</h3>
+  <p>You might wonder: why not just give every word in the English language its own token? That would work, but it has problems:</p>
+  <ul>
+    <li><strong>English has ~170,000 common words</strong> — that's a huge vocabulary, and it keeps growing with new words, slang, and technical terms</li>
+    <li><strong>What about names and rare words?</strong> "Schwarzenegger" or "backpropagation" would need their own tokens — but there are millions of possible rare words</li>
+    <li><strong>Other languages!</strong> A word-based system struggles to handle multiple languages and new languages efficiently</li>
+  </ul>
+
+  <p>The solution: <strong>subword tokenization</strong>. Break words into smaller pieces so that even completely new or rare words can be assembled from known pieces — like using alphabet letters to spell any word.</p>
+
+  <div class="remember-box">
+    <div class="remember-box-label">✅ Key Fact</div>
+    <p>ChatGPT (GPT-4) uses a vocabulary of about <strong>100,000 tokens</strong>. With those 100,000 pieces, it can handle text in many different languages and express virtually anything. A typical English word is about 1-3 tokens. A page of text is roughly 500–700 tokens.</p>
+  </div>
+
+  <div class="watchout-box">
+    <div class="watchout-box-label">💬 What Is a "Context Window"?</div>
+    <p>You may have heard that AI models have a "context window" of X thousand tokens. This is how much text the model can "see" at once — like its working memory. <strong>GPT-4 has a context window of 128,000 tokens</strong>, which is roughly 100,000 words — about the length of a long novel. This is why tokens, not words, are used to measure AI input size.</p>
+  </div>
+
+  <h3>Try It Yourself — Tokenizer Demo</h3>
+  <p>Type any text in the tool below and watch it get split into tokens in real time. You'll see each token highlighted in a different color, and you can see exactly what ID number each token gets.</p>
+
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <div class="demo-title">🔤 TokenVisor — Watch Your Text Become Numbers</div>
+      <a href="https://gduteaud.github.io/tokenvisor/" target="_blank" class="demo-btn outline">Open Full Screen ↗</a>
+    </div>
+    <iframe src="https://gduteaud.github.io/tokenvisor/" height="460" loading="lazy" title="TokenVisor"></iframe>
+  </div>
+
+  <div class="try-it">
+    <div class="try-it-label">🎮 Things to Try</div>
+    <ul>
+      <li><strong>Type a normal sentence</strong> — notice how common words like "the" and "cat" get their own single token</li>
+      <li><strong>Type a rare word</strong> like "photosynthesis" or "backpropagation" — notice how it gets split into smaller pieces</li>
+      <li><strong>Try "Cat" vs "cat"</strong> — a capital letter at the start might give a completely different token ID!</li>
+      <li><strong>Count the tokens in a paragraph</strong> — how many tokens does it take? Compare to the word count. Are they different?</li>
+      <li><strong>Try text from another language</strong> — how does the tokenizer handle words it wasn't primarily designed for?</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION 4: EMBEDDINGS
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="section4">
+  <div class="section-header">
+    <div class="section-emoji">🌌</div>
+    <div>
+      <h2>Embeddings — Teaching the Computer What Words Mean</h2>
+      <div class="section-sub">Section 4 of 4</div>
+    </div>
+  </div>
+
+  <h3>We Have Numbers — But Do They Mean Anything?</h3>
+  <p>Great — we can convert words to numbers using tokens. "cat" = 2, "dog" = 6, "mathematics" = 4.</p>
+  <p>But wait. These ID numbers are just labels — they don't say anything about what the words <em>mean</em>. Look at those numbers: <code>cat = 2</code>, <code>mathematics = 4</code>, <code>dog = 6</code>. The numbers suggest that "mathematics" (4) is somehow between "cat" (2) and "dog" (6) in meaning. That's nonsense! "Cat" and "dog" are much more related to each other than either is to "mathematics."</p>
+  <p>So raw token IDs have a big problem: <strong>they carry no information about meaning.</strong> We need something smarter.</p>
+
+  <h3>The Failed Attempt: One-Hot Encoding</h3>
+  <p>One naive solution is called <strong>one-hot encoding</strong>. Instead of giving each word a single number, you give it a long list of zeros with a single 1 in the position matching its ID.</p>
+
+  <div class="visual-box">
+    <h4>🔢 One-Hot Encoding Example</h4>
+    <p style="margin-bottom:14px">Imagine we have a tiny vocabulary of 8 words. Here's how "cat", "dog", and "mat" would be represented:</p>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-family:Courier New;font-size:13px;text-align:center">
+        <thead>
+          <tr style="background:#2c3e50;color:white">
+            <th style="padding:8px 12px;text-align:left">Word</th>
+            <th style="padding:8px">the</th><th style="padding:8px">cat</th><th style="padding:8px">sat</th>
+            <th style="padding:8px">on</th><th style="padding:8px">mat</th><th style="padding:8px">dog</th>
+            <th style="padding:8px">ran</th><th style="padding:8px">fast</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:8px 12px;font-weight:700;color:#2c3e50;text-align:left;border:1px solid #e0d8c8">cat</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;background:#d5f5e3;color:#1a5c35;font-weight:700">1</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+          </tr>
+          <tr style="background:#faf7f2">
+            <td style="padding:8px 12px;font-weight:700;color:#2c3e50;text-align:left;border:1px solid #e0d8c8">dog</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;background:#d5f5e3;color:#1a5c35;font-weight:700">1</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;font-weight:700;color:#2c3e50;text-align:left;border:1px solid #e0d8c8">mat</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;background:#d5f5e3;color:#1a5c35;font-weight:700">1</td>
+            <td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td><td style="padding:8px;border:1px solid #e0d8c8;color:#aaa">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p>The problems with this approach are serious:</p>
+  <ul>
+    <li><strong>Enormous lists:</strong> If the vocabulary has 100,000 tokens, every single word becomes a list of 99,999 zeros and one 1. That's massively wasteful.</li>
+    <li><strong>No meaning encoded:</strong> "Cat" and "dog" are just as "far apart" in this system as "cat" and "mathematics." The numbers carry zero information about which words are related.</li>
+    <li><strong>The computer can't learn word relationships</strong> using these representations.</li>
+  </ul>
+
+  <h3>The Real Solution: Learned Embeddings</h3>
+  <p>Instead of manually assigning representations, we let the neural network <strong>figure out the best representation on its own</strong> during training. This is called a <strong>learned embedding</strong>.</p>
+  <p>Here's how it works: instead of giving each token a number (1, 2, 3...) or a one-hot list, we give each token a <strong>list of several hundred numbers</strong>. This list is called an <strong>embedding vector</strong>.</p>
+
+  <div class="story-box">
+    <div class="story-box-label">📍 Analogy — A Secret Location Code</div>
+    <p>Imagine every word has a secret address in a giant invisible multi-dimensional space. Words that are similar in meaning will have addresses that are close together. Words that are unrelated will have addresses far apart.</p>
+    <p>An embedding vector is that secret address. A word like "cat" might have an address of <code>[0.82, 0.91, -0.12, 0.44, ...]</code>. A word like "kitten" might have an address of <code>[0.79, 0.88, -0.09, 0.41, ...]</code>. Notice how similar those numbers are? That's because "cat" and "kitten" mean similar things, so they live close together in this imaginary space.</p>
+  </div>
+
+  <h3>Seeing the Similarity</h3>
+  <p>Real embeddings have hundreds of numbers per word. Here's a simplified 4-number example that shows the key property — <strong>similar words have similar-looking vectors:</strong></p>
+
+  <div class="visual-box">
+    <h4>🌌 Embedding Vectors — 4-Dimension Example (Real ones have 768 or more dimensions!)</h4>
+    <div class="embed-rows">
+      <div class="embed-row">
+        <span class="embed-word">cat 🐱</span>
+        <span class="embed-vec">[ 0.82, &nbsp;0.91, -0.12, &nbsp;0.44 ]</span>
+        <span class="embed-tag">Animal</span>
+      </div>
+      <div class="embed-row">
+        <span class="embed-word">kitten 🐱</span>
+        <span class="embed-vec">[ 0.79, &nbsp;0.88, -0.09, &nbsp;0.41 ]</span>
+        <span class="embed-tag">Animal</span>
+      </div>
+      <div class="embed-row">
+        <span class="embed-word">dog 🐶</span>
+        <span class="embed-vec">[ 0.77, &nbsp;0.85, -0.15, &nbsp;0.38 ]</span>
+        <span class="embed-tag">Animal</span>
+      </div>
+      <div class="embed-row">
+        <span class="embed-word">automobile 🚗</span>
+        <span class="embed-vec">[-0.21, &nbsp;0.14, &nbsp;0.88, -0.55 ]</span>
+        <span class="embed-tag far">Vehicle</span>
+      </div>
+      <div class="embed-row">
+        <span class="embed-word">car 🚗</span>
+        <span class="embed-vec">[-0.19, &nbsp;0.11, &nbsp;0.91, -0.52 ]</span>
+        <span class="embed-tag far">Vehicle</span>
+      </div>
+    </div>
+    <p style="font-size:14px;color:var(--text2);margin-top:14px">🔍 Notice how cat, kitten, and dog all have similar numbers — they "live close together." Automobile and car also live close together, but far from the animals. <strong>The computer figured this out on its own — nobody told it that cats and dogs are both animals!</strong></p>
+  </div>
+
+  <h3>Where Does This "Knowledge" Come From?</h3>
+  <p>The magic is that <strong>the computer learns this from patterns in text</strong>. During training, it reads billions of sentences. It notices that "cat" and "dog" both appear before the words "ran", "sat", "ate", "played", etc. It notices they're both in sentences about pets, about animals, about fur. From all these patterns, it naturally clusters them together.</p>
+  <p>Nobody programmed in the rule "cats and dogs are both animals." The computer figured it out entirely from seeing how these words were used in context. That's what makes it remarkable.</p>
+
+  <div class="big-idea">
+    <div class="big-idea-label">🤯 The Coolest Result — Word Math</div>
+    <p>One of the most famous discoveries about word embeddings is that they support <strong>meaning arithmetic</strong>. In embedding space, if you do this calculation:</p>
+    <p style="text-align:center;font-size:17px;font-weight:700;margin:14px 0"><code>vector("king") − vector("man") + vector("woman") ≈ vector("queen")</code></p>
+    <p>In other words: King, minus the concept of "man," plus the concept of "woman," gives you something very close to "queen." The mathematical structure of the embeddings mirrors the real-world structure of the concepts. <strong>The computer learned this just from reading text — it was never told what a king or queen is.</strong></p>
+  </div>
+
+  <h3>Explore Real Embeddings — Interactive Demo</h3>
+  <p>The tool below lets you search for any word and see which other words have the most similar embeddings — meaning they "live nearby" in the computer's understanding of language.</p>
+
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <div class="demo-title">🌌 Embedding Explorer — See Which Words Are "Related" in the AI's Mind</div>
+      <a href="https://gduteaud.github.io/embedding-explorer/" target="_blank" class="demo-btn outline">Open Full Screen ↗</a>
+    </div>
+    <iframe src="https://gduteaud.github.io/embedding-explorer/" height="480" loading="lazy" title="Embedding Explorer"></iframe>
+  </div>
+
+  <div class="try-it">
+    <div class="try-it-label">🎮 Things to Explore</div>
+    <ul>
+      <li><strong>Search "cat"</strong> — which words show up as nearest neighbors? Are they what you expected?</li>
+      <li><strong>Search "Paris"</strong> — is "London" nearby? Is "France" nearby? (Cities and their countries tend to cluster)</li>
+      <li><strong>Try opposites</strong> like "hot" and "cold" — are they close or far apart? (Opposites are often surprisingly close — they appear in similar sentence contexts!)</li>
+      <li><strong>Try completely unrelated words</strong> from different domains — do they naturally end up far apart?</li>
+      <li><strong>Compare abstract words</strong> like "freedom" and "justice" — what words live nearby?</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SUMMARY
+══════════════════════════════════════════════════════════ -->
+<section class="section" id="summary">
+  <div class="section-header">
+    <div class="section-emoji">📋</div>
+    <div>
+      <h2>Summary — Everything In One Place</h2>
+      <div class="section-sub">Key Concepts Glossary</div>
+    </div>
+  </div>
+
+  <p>Here is every important term from today's lesson, explained in plain language:</p>
+
+  <table class="summary-table">
+    <thead>
+      <tr><th>Term</th><th>What It Means (Plain English)</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Weight</td>
+        <td>A number inside a neural network that gets adjusted during training. Think of it as a dial that controls how much the computer pays attention to a particular piece of input. There can be millions of these.</td>
+      </tr>
+      <tr>
+        <td>Loss</td>
+        <td>A score for how wrong the computer's prediction is. <strong>Lower is better.</strong> A loss of 0 means perfect. The goal of training is to make the loss as small as possible.</td>
+      </tr>
+      <tr>
+        <td>Loss Function</td>
+        <td>The formula used to calculate the loss. It takes the computer's guess and the correct answer, and produces the "how wrong are we?" number. Mean Squared Error (MSE) is one common example.</td>
+      </tr>
+      <tr>
+        <td>Gradient</td>
+        <td>The mathematical way of saying "which direction to adjust each weight to reduce the loss." Think of it as feeling the slope of a hill to know which way is downhill.</td>
+      </tr>
+      <tr>
+        <td>Gradient Descent</td>
+        <td>The training algorithm. It repeatedly measures the loss, calculates the gradient (slope), and takes a small step downhill (adjusting each weight to reduce the loss). Like walking downhill blindfolded, step by step.</td>
+      </tr>
+      <tr>
+        <td>Learning Rate</td>
+        <td>Controls how big each step is in gradient descent. Too big → overshoots. Too small → takes forever. Getting this right is important.</td>
+      </tr>
+      <tr>
+        <td>Forward Pass</td>
+        <td>Feeding input data through the network from start to finish to get a prediction. Like a factory assembly line running forward.</td>
+      </tr>
+      <tr>
+        <td>Backward Pass</td>
+        <td>After calculating the loss, sending the error signal backwards through all the layers to figure out how much each weight contributed to the mistake. This is backpropagation.</td>
+      </tr>
+      <tr>
+        <td>Backpropagation</td>
+        <td>The algorithm that figures out how much each weight (in each layer) is responsible for the final error. Works backwards through the layers. Works together with gradient descent so the whole network can learn.</td>
+      </tr>
+      <tr>
+        <td>Epoch</td>
+        <td>One complete pass through all the training data. Like reading an entire textbook once. Training usually takes many epochs (10, 50, 100+).</td>
+      </tr>
+      <tr>
+        <td>Batch</td>
+        <td>A small chunk of training data processed together before one weight update. Instead of 60,000 examples one-by-one (too slow) or all at once (too much memory), we process them in batches (e.g. 100 at a time).</td>
+      </tr>
+      <tr>
+        <td>Token</td>
+        <td>A chunk of text (a word, part of a word, or punctuation) that the computer treats as one unit. Every token has a unique ID number. "backpropagation" might be split into tokens: "back" + "prop" + "ag" + "ation".</td>
+      </tr>
+      <tr>
+        <td>Vocabulary</td>
+        <td>The complete set of all tokens the computer knows. GPT-4 has about 100,000 tokens in its vocabulary.</td>
+      </tr>
+      <tr>
+        <td>Subword Tokenization</td>
+        <td>Splitting words into smaller reusable pieces so the computer can handle rare words, technical terms, and other languages — even words it has never seen before — by building them from known pieces.</td>
+      </tr>
+      <tr>
+        <td>Context Window</td>
+        <td>The maximum amount of text a model can "see" at once, measured in tokens. GPT-4's 128,000-token context window is about the length of a long novel.</td>
+      </tr>
+      <tr>
+        <td>Embedding</td>
+        <td>A long list of numbers (hundreds of them) that represents the <em>meaning</em> of a token. Words with similar meanings get similar-looking embedding vectors. The computer learns these during training — nobody programs the meanings in by hand.</td>
+      </tr>
+      <tr>
+        <td>One-Hot Vector</td>
+        <td>A simple but flawed way to represent words: a list of all zeros except for a single 1 at the word's position. Huge, wasteful, and encodes no meaning.</td>
+      </tr>
+      <tr>
+        <td>Semantic Similarity</td>
+        <td>Words that mean similar things end up with similar embedding vectors — they "live close together" in the embedding space. "Cat" and "kitten" are semantically similar. "Cat" and "democracy" are not.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-top:40px">All Interactive Tools</h3>
+  <p>Use these throughout and after class to deepen your understanding:</p>
+
+  <div class="demo-grid">
+    <div class="demo-card">
+      <div class="demo-card-header">⛰ TensorFlow Playground</div>
+      <div class="demo-card-body">
+        <p>Watch a neural network train in real time. See the loss go down and the decision boundary change as it learns. Adjust the learning rate and watch what happens.</p>
+        <a href="https://playground.tensorflow.org/" target="_blank" class="demo-btn">Open ↗</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-card-header">🔵 ConvNetJS Classifier</div>
+      <div class="demo-card-body">
+        <p>Simpler live training demo. Great for watching the loss number fall in real time as the network learns to separate colored dots into groups.</p>
+        <a href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html" target="_blank" class="demo-btn">Open ↗</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-card-header">🔤 TokenVisor</div>
+      <div class="demo-card-body">
+        <p>Type any text and see exactly how it gets split into tokens and what ID number each token gets assigned. Great for understanding how the computer reads words.</p>
+        <a href="https://gduteaud.github.io/tokenvisor/" target="_blank" class="demo-btn">Open ↗</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-card-header">🌌 Embedding Explorer</div>
+      <div class="demo-card-body">
+        <p>Search any word and see which other words have the most similar embeddings — meaning they "live nearby" in the AI's understanding of language.</p>
+        <a href="https://gduteaud.github.io/embedding-explorer/" target="_blank" class="demo-btn">Open ↗</a>
+      </div>
+    </div>
+    <div class="demo-card">
+      <div class="demo-card-header">🎬 3Blue1Brown — Backpropagation</div>
+      <div class="demo-card-body">
+        <p>A beautifully animated YouTube video explaining gradient descent and backpropagation with clear visuals. The best video on this topic.</p>
+        <a href="https://youtu.be/NrO20Jb-hy0" target="_blank" class="demo-btn">Watch ↗</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<script>
+  const sections = document.querySelectorAll('.section');
+  const pills = document.querySelectorAll('.nav-pill');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        pills.forEach(p => p.classList.toggle('active', p.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { threshold: 0.2 });
+  sections.forEach(s => observer.observe(s));
+  pills.forEach(pill => {
+    pill.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(pill.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
