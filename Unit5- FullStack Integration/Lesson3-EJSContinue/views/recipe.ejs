@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= recipe.name %></title>
+  <!-- Include Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-lg-8">
+        <h1><%= recipe.name %></h1>
+
+        <%# EJS comment: this description may include safe HTML output. %>
+        <p><%- recipe.description %></p>
+
+        <% const hasDiscount = Boolean(recipe.discountPercentage); %>
+        <% const discountedPrice = hasDiscount ? recipe.price * (1 - recipe.discountPercentage / 100) : recipe.price; %>
+
+        <p class="mb-1">Price:
+          <% if (hasDiscount) { %>
+            <span class="text-decoration-line-through text-muted">$<%= recipe.price.toFixed(2) %></span>
+            <span class="fw-bold text-danger ms-2">$<%= discountedPrice.toFixed(2) %></span>
+            <small class="text-success">(<%= recipe.discountPercentage %>% off)</small>
+          <% } else { %>
+            <span class="fw-bold">$<%= recipe.price.toFixed(2) %></span>
+          <% } %>
+        </p>
+
+        <% if (recipe.stock === 0) { %>
+          <p><span class="badge bg-danger">Out of stock</span></p>
+        <% } else if (recipe.stock <= 5) { %>
+          <p><span class="badge badge-low-stock">Low stock</span></p>
+        <% } else { %>
+          <p><span class="badge badge-in-stock">In stock</span></p>
+        <% } %>
+
+        <h5>Ingredients</h5>
+        <ul class="list-group mb-4">
+          <% recipe.ingredients.forEach(ingredient => { %>
+            <li class="list-group-item"><%= ingredient %></li>
+          <% }) %>
+        </ul>
+
+        <a href="/" class="btn btn-secondary">Back to recipes</a>
+      </div>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

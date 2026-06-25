@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+  }
+  
+  h1 {
+    color: #007bff;
+    font-size: 2rem;
+  }
+  
+  .card {
+    margin-bottom: 20px;
+  }
+  
+  .navbar {
+    margin-bottom: 20px;
+  }
+  
+  footer {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #343a40;
+    color: white;
+  }
+
+  .badge.badge-low-stock {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .badge.badge-in-stock {
+    background-color: #198754;
+  }
+
+  .badge.badge-out-of-stock {
+    background-color: #dc3545;
+  }
+  
