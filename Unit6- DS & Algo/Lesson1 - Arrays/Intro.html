@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Structures & Memory — Intro to JavaScript</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #26313C;
+    --muted: #6B7684;
+    --paper: #FFFFFF;
+    --panel: #F6F7F8;
+    --line: #E4E7EA;
+    --accent: #4C6EF5;
+    --accent-soft: #EEF1FE;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    line-height:1.65;
+    font-size:16px;
+  }
+  code, .mono{ font-family:'IBM Plex Mono', monospace; font-size:0.92em; }
+  .wrap{max-width:760px; margin:0 auto; padding:0 24px;}
+
+  header.top{
+    padding: 56px 0 36px;
+    border-bottom: 1px solid var(--line);
+  }
+  header.top .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color: var(--muted);
+  }
+  header.top h1{
+    font-size: clamp(30px, 5vw, 40px);
+    margin: 10px 0 14px;
+    font-weight:700;
+  }
+  header.top p.sub{
+    font-size:16.5px;
+    color: var(--muted);
+    max-width:560px;
+    margin:0;
+  }
+
+  section{padding: 44px 0;}
+  section + section{border-top: 1px solid var(--line);}
+
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; text-transform:uppercase; letter-spacing:0.06em;
+    color: var(--accent);
+    margin:0 0 8px;
+  }
+  h2.title{
+    font-size: 23px;
+    margin:0 0 10px;
+    font-weight:700;
+  }
+  .lede{
+    font-size:16px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  p{margin: 0 0 14px;}
+
+  .note{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size:15px;
+  }
+  .note .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em;
+    color: var(--muted);
+    display:block; margin-bottom:6px;
+  }
+
+  .grid2{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    align-items:center;
+  }
+  @media (max-width: 700px){ .grid2{grid-template-columns: 1fr;} }
+
+  svg{max-width:100%; height:auto; display:block;}
+
+  .box-list{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap:12px; margin-top:20px;
+  }
+  .box-item{
+    border:1px solid var(--line); border-radius:8px;
+    padding:14px 16px;
+  }
+  .box-item h4{margin:0 0 4px; font-size:14.5px; font-weight:600;}
+  .box-item p{margin:0; font-size:13.5px; color:var(--muted);}
+
+  table.op-table{
+    width:100%; border-collapse: collapse; margin-top:16px;
+    font-size:14.5px;
+  }
+  table.op-table th, table.op-table td{
+    text-align:left; padding:10px 14px; border-bottom:1px solid var(--line);
+  }
+  table.op-table th{
+    color: var(--muted);
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+    text-transform:uppercase; letter-spacing:0.05em; font-weight:500;
+  }
+  table.op-table td code{
+    background: var(--panel); padding:2px 6px; border-radius:4px;
+  }
+
+  .bigO-scale{
+    display:flex; flex-direction:column; gap:10px; margin-top:20px;
+  }
+  .bigO-row{
+    display:grid; grid-template-columns: 76px 1fr 220px; gap:12px; align-items:center;
+  }
+  @media (max-width: 560px){
+    .bigO-row{grid-template-columns: 60px 1fr; }
+    .bigO-desc{grid-column: 1 / -1;}
+  }
+  .bigO-bar-track{
+    height:8px; background: var(--panel); border-radius:100px; overflow:hidden;
+  }
+  .bigO-bar-fill{height:100%; border-radius:100px; background: var(--accent);}
+  .bigO-name{font-family:'IBM Plex Mono', monospace; font-size:13px; font-weight:500;}
+  .bigO-desc{font-size:13px; color:var(--muted);}
+
+  pre.code{
+    background: var(--panel); border:1px solid var(--line);
+    color: var(--ink); padding:14px 16px; border-radius:8px;
+    font-size:13.5px; overflow-x:auto; margin: 12px 0;
+  }
+
+  .recap{
+    background: var(--accent-soft);
+    border-radius: 8px; padding: 20px 22px; margin-top:28px;
+    font-size:14.5px;
+  }
+  .recap h3{margin-top:0; font-size:15.5px;}
+  .recap p{color: var(--ink); opacity:0.85; margin-bottom:0;}
+
+  footer{
+    text-align:center; padding: 28px 0; font-size:12.5px;
+    color: var(--muted);
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  .term-grid{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap:12px; margin-top:20px;
+  }
+  .term-card{
+    border:1px solid var(--line); border-radius:8px;
+    padding:16px 18px;
+    background: var(--paper);
+  }
+  .term-card .term{
+    font-weight:700; font-size:15px; margin-bottom:6px;
+  }
+  .term-card p{margin:0; font-size:13.5px; color:var(--muted);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">Lesson 1 — Data Structures & Algorithms in JavaScript</span>
+    <h1>Welcome to Data Structures</h1>
+  </div>
+</header>
+
+<section id="bigpicture">
+  <div class="wrap">
+    <p class="kicker">00 — The Big Picture</p>
+    <h2 class="title">What is "DSA," really?</h2>
+    <p class="lede"><strong>DSA</strong> stands for <strong>Data Structures and Algorithms</strong>. It's not a JavaScript thing, or a Python thing — it's a general computer science idea. Every programming language lets you organize data (data structures) and write steps to solve problems (algorithms). We'll learn the ideas using JavaScript, but the ideas themselves work everywhere.</p>
+
+    <div class="note">
+      <span class="label">In one sentence</span>
+      Data structures are the containers for information, and algorithms are the instructions for doing something useful with it. Learning DSA means learning to pick good containers and write good instructions.
+    </div>
+
+    <h3 style="font-size:16.5px; margin-top:30px;">Why bother learning this?</h3>
+    <p>You can write code without ever thinking about this. But as soon as an app has a lot of data — thousands of users, millions of posts, a big product catalog — the <em>way</em> that data is organized decides whether the app feels instant or feels frozen. Learning DSA teaches you to:</p>
+    <div class="box-list">
+      <div class="box-item">
+        <h4>Write faster code</h4>
+        <p>Know which container and which steps keep your app quick, even with lots of data.</p>
+      </div>
+      <div class="box-item">
+        <h4>Solve problems, not just syntax</h4>
+        <p>Break a big, messy problem into small, clear steps — a skill that outlasts any one language.</p>
+      </div>
+      <div class="box-item">
+        <h4>Read other people's code</h4>
+        <p>Most real codebases are built on these same basic ideas, so you'll recognize patterns faster.</p>
+      </div>
+      <div class="box-item">
+        <h4>Do well in interviews</h4>
+        <p>DSA is one of the most common topics companies ask about when hiring developers.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:16.5px; margin-top:30px;">Where do you already see this?</h3>
+    <p>DSA isn't abstract — you use apps built on it every day:</p>
+    <div class="box-list">
+      <div class="box-item">
+        <h4>Maps & GPS</h4>
+        <p>Finding the fastest route uses graphs (roads and intersections) and pathfinding algorithms.</p>
+      </div>
+      <div class="box-item">
+        <h4>Autocomplete & search</h4>
+        <p>Suggesting words or search results fast, even with millions of options, relies on smart data structures.</p>
+      </div>
+      <div class="box-item">
+        <h4>Undo button</h4>
+        <p>Ctrl+Z works like a stack — the last thing you did is the first thing that gets undone.</p>
+      </div>
+      <div class="box-item">
+        <h4>Music queues & playlists</h4>
+        <p>"Play next" behaves like a queue — songs play in the order they were added.</p>
+      </div>
+    </div>
+
+    <div class="recap">
+      <h3>Same ideas, different accents</h3>
+      <p>Every language has its own way of writing these ideas — a small difference in syntax, not in concept. A JavaScript array, a Python list, and a Java array are all "a row of numbered lockers" underneath. Once you understand the idea in JavaScript, you can recognize it instantly in almost any other language — only the exact words and punctuation change.</p>
+    </div>
+  </div>
+</section>
+
+<section id="glossary">
+  <div class="wrap">
+    <p class="kicker">01 — Key Words</p>
+    <h2 class="title">A few words we'll use a lot</h2>
+    <p class="lede">Before anything else, let's put simple meanings on some words you'll hear all the time in this course. You don't need to memorize these — just get a rough feel for them. We'll come back to each one.</p>
+
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="term">Data</div>
+        <p>Any piece of information a program works with — a name, a number, a score, a list of friends.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Data structure</div>
+        <p>A way of arranging data so it's easy to use. Like choosing a drawer, a box, or a shelf for your stuff.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Algorithm</div>
+        <p>A list of steps to solve a problem — like a recipe. We'll write our first one later this course.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Memory (RAM)</div>
+        <p>The part of a computer that holds data while a program is running. Think of it as storage space.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Memory address</div>
+        <p>A number that marks exactly where one piece of data lives in memory — like a house number on a street.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Index</div>
+        <p>A number that marks a position inside a data structure like an array. Counting starts at 0 in JavaScript.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Time complexity</div>
+        <p>A rough measure of how long something takes as the amount of data grows.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Space complexity</div>
+        <p>A rough measure of how much extra memory something needs as the amount of data grows.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Big O</div>
+        <p>The short way programmers write time or space complexity, like <code>O(n)</code>. We'll unpack this below.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="structures">
+  <div class="wrap">
+    <p class="kicker">02 — Data Structures</p>
+    <h2 class="title">Why not just dump everything in one pile?</h2>
+    <p class="lede">A data structure is a way of organizing data so it's easy to find, add, or remove things later. In this course we'll organize and use data with JavaScript. Different jobs need different kinds of organization.</p>
+
+    <div class="note">
+      <span class="label">Think of it like...</span>
+      Your bedroom. Throw everything into one pile, and finding your headphones takes forever. Give clothes a drawer, books a shelf, and cables a small box — now you know exactly where to look. Data structures are the drawers, shelves, and boxes for your data.
+    </div>
+
+    <p style="font-size:14.5px; color:var(--muted); margin-top:24px;">Here are a few common data structures. We'll use JavaScript arrays a lot this course, and meet the others later on.</p>
+    <div class="box-list">
+      <div class="box-item">
+        <h4>Lists / Arrays</h4>
+        <p>Items lined up in order, like socks in numbered drawer slots. This is our focus today.</p>
+      </div>
+      <div class="box-item">
+        <h4>Stacks</h4>
+        <p>Like a stack of plates — you add and remove from the top.</p>
+      </div>
+      <div class="box-item">
+        <h4>Queues</h4>
+        <p>Like a line at the movies — first person in, first person served.</p>
+      </div>
+      <div class="box-item">
+        <h4>Trees & Graphs</h4>
+        <p>Like a family tree or a subway map — things connected to other things.</p>
+      </div>
+    </div>
+
+    <div class="recap">
+      <h3>Data structures + algorithms: a team</h3>
+      <p>A data structure organizes the "stuff." An algorithm is the steps that <em>do something</em> with that stuff — search it, sort it, combine it. Pick the wrong container and even a great algorithm gets slow. We'll write our first algorithm together soon — for now, just remember the two always work as a pair.</p>
+    </div>
+  </div>
+</section>
+
+<section id="memory">
+  <div class="wrap">
+    <p class="kicker">03 — Memory</p>
+    <h2 class="title">Every piece of data has an address</h2>
+    <p class="lede">A computer's memory (RAM) is like a long street of small houses. Every house holds one piece of data, and every house has its own address — a number.</p>
+
+    <div class="grid2">
+      <div>
+        <p>When your JavaScript code creates a variable, like <code>let name = "Sam"</code>, the computer finds an empty house in memory and writes the value there. The computer remembers the <strong>address</strong>, not the value itself — like remembering a street number instead of memorizing what's inside the house.</p>
+        <p>This matters because how a data structure arranges its houses changes how fast we can find things later. Some structures (like arrays) keep houses in a neat row, so it's fast to jump around. We'll see why that makes arrays quick to work with.</p>
+      </div>
+      <div>
+        <svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="IBM Plex Mono, monospace" font-size="11" fill="#26313C">
+            <rect x="10" y="60" width="55" height="60" rx="5" fill="#F6F7F8" stroke="#C7CCD1"/>
+            <text x="37" y="96" text-anchor="middle" font-size="16">"H"</text>
+            <text x="37" y="138" text-anchor="middle" fill="#6B7684">0x001</text>
+
+            <rect x="85" y="60" width="55" height="60" rx="5" fill="#EEF1FE" stroke="#C9D2FB"/>
+            <text x="112" y="96" text-anchor="middle" font-size="16">"i"</text>
+            <text x="112" y="138" text-anchor="middle" fill="#6B7684">0x002</text>
+
+            <rect x="160" y="60" width="55" height="60" rx="5" fill="#F6F7F8" stroke="#C7CCD1"/>
+            <text x="187" y="96" text-anchor="middle" font-size="16">42</text>
+            <text x="187" y="138" text-anchor="middle" fill="#6B7684">0x003</text>
+
+            <rect x="235" y="60" width="55" height="60" rx="5" fill="#FBFBFB" stroke="#E4E7EA" stroke-dasharray="3 3"/>
+            <text x="262" y="96" text-anchor="middle" fill="#B3B9BF">·</text>
+            <text x="262" y="138" text-anchor="middle" fill="#6B7684">0x004</text>
+
+            <rect x="310" y="60" width="55" height="60" rx="5" fill="#FBFBFB" stroke="#E4E7EA" stroke-dasharray="3 3"/>
+            <text x="337" y="96" text-anchor="middle" fill="#B3B9BF">·</text>
+            <text x="337" y="138" text-anchor="middle" fill="#6B7684">0x005</text>
+          </g>
+          <text x="190" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#6B7684">each box = one memory cell, each number = its address</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bigo">
+  <div class="wrap">
+    <p class="kicker">04 — Complexity</p>
+    <h2 class="title">How much slower does this get as data grows?</h2>
+    <p class="lede">This is what programmers call <strong>Big O</strong>. Don't worry about the funny symbol — it's just a rough label for how long something takes as the pile of data grows.</p>
+
+    <div class="note">
+      <span class="label">Think of it like...</span>
+      Looking for a name in a phone book. Know the exact page? Flip straight there — fast, no matter how thick the book is. No idea where to look? You might check every page — slow, and worse as the book gets thicker. Big O describes which situation you're in.
+    </div>
+
+    <div class="bigO-scale">
+      <div class="bigO-row">
+        <span class="bigO-name">O(1)</span>
+        <div class="bigO-bar-track"><div class="bigO-bar-fill" style="width:8%;"></div></div>
+        <span class="bigO-desc">Instant — grabbing item #3 directly</span>
+      </div>
+      <div class="bigO-row">
+        <span class="bigO-name">O(log n)</span>
+        <div class="bigO-bar-track"><div class="bigO-bar-fill" style="width:22%;"></div></div>
+        <span class="bigO-desc">Quick — cutting the search in half each time</span>
+      </div>
+      <div class="bigO-row">
+        <span class="bigO-name">O(n)</span>
+        <div class="bigO-bar-track"><div class="bigO-bar-fill" style="width:50%;"></div></div>
+        <span class="bigO-desc">Fair — checking every item once</span>
+      </div>
+      <div class="bigO-row">
+        <span class="bigO-name">O(n²)</span>
+        <div class="bigO-bar-track"><div class="bigO-bar-fill" style="width:82%;"></div></div>
+        <span class="bigO-desc">Slow — comparing every item to every other item</span>
+      </div>
+    </div>
+
+    <p style="margin-top:22px; font-size:14.5px; color:var(--muted);">
+      There's a related idea called <strong>space complexity</strong>. Instead of asking "how long does this take?", it asks "how many extra memory houses does this need?" A fast approach that uses a lot of extra memory isn't always the best choice.
+    </p>
+    <a style="margin-top:22px; font-size:14.5px; color:var(--muted);" href="https://www.bigocheatsheet.com/" target="_blank">Big O cheatSheet</a>
+  </div>
+</section>
+
+<section id="arrays">
+  <div class="wrap">
+    <p class="kicker">05 — Arrays</p>
+    <h2 class="title">The array: your first data structure in JavaScript</h2>
+    <p class="lede">An array is a row of numbered lockers sitting next to each other in memory. Each locker holds one value, and each locker has a number — its <strong>index</strong>.</p>
+
+    <svg viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg">
+      <text x="260" y="18" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" fill="#26313C">const fruits = ["apple","banana","grape","melon","cherry"];</text>
+      <g font-family="IBM Plex Mono, monospace">
+        <g>
+          <rect x="10" y="35" width="90" height="70" rx="6" fill="#F6F7F8" stroke="#C7CCD1"/>
+          <text x="55" y="72" text-anchor="middle" font-size="12" fill="#26313C">apple</text>
+          <text x="55" y="120" text-anchor="middle" font-size="13" fill="#6B7684">index</text>
+          <text x="55" y="136" text-anchor="middle" font-size="14" font-weight="700" fill="#4C6EF5">0</text>
+        </g>
+        <g>
+          <rect x="110" y="35" width="90" height="70" rx="6" fill="#F6F7F8" stroke="#C7CCD1"/>
+          <text x="155" y="72" text-anchor="middle" font-size="12" fill="#26313C">banana</text>
+          <text x="155" y="120" text-anchor="middle" font-size="13" fill="#6B7684">index</text>
+          <text x="155" y="136" text-anchor="middle" font-size="14" font-weight="700" fill="#26313C">1</text>
+        </g>
+        <g>
+          <rect x="210" y="35" width="90" height="70" rx="6" fill="#F6F7F8" stroke="#C7CCD1"/>
+          <text x="255" y="72" text-anchor="middle" font-size="12" fill="#26313C">grape</text>
+          <text x="255" y="120" text-anchor="middle" font-size="13" fill="#6B7684">index</text>
+          <text x="255" y="136" text-anchor="middle" font-size="14" font-weight="700" fill="#26313C">2</text>
+        </g>
+        <g>
+          <rect x="310" y="35" width="90" height="70" rx="6" fill="#F6F7F8" stroke="#C7CCD1"/>
+          <text x="355" y="72" text-anchor="middle" font-size="12" fill="#26313C">melon</text>
+          <text x="355" y="120" text-anchor="middle" font-size="13" fill="#6B7684">index</text>
+          <text x="355" y="136" text-anchor="middle" font-size="14" font-weight="700" fill="#26313C">3</text>
+        </g>
+        <g>
+          <rect x="410" y="35" width="90" height="70" rx="6" fill="#F6F7F8" stroke="#C7CCD1"/>
+          <text x="455" y="72" text-anchor="middle" font-size="12" fill="#26313C">cherry</text>
+          <text x="455" y="120" text-anchor="middle" font-size="13" fill="#6B7684">index</text>
+          <text x="455" y="136" text-anchor="middle" font-size="14" font-weight="700" fill="#26313C">4</text>
+        </g>
+      </g>
+    </svg>
+
+    <div class="note">
+      <span class="label">Important habit</span>
+      JavaScript (like almost every language) starts counting at <strong>0</strong>, not 1. So <code>fruits[0]</code> is the first locker, and <code>fruits[4]</code> is the last one in a 5-item array. This trips up everyone at first — you're in good company.
+    </div>
+
+    <h3 style="font-size:16.5px; margin-top:28px;">What can you do with an array?</h3>
+    <table class="op-table">
+      <tr><th>Operation</th><th>What it means</th><th>JavaScript</th></tr>
+      <tr><td>Access</td><td>Look at what's in a specific locker</td><td><code>fruits[2]</code></td></tr>
+      <tr><td>Add to the end</td><td>Put a new item in the next open locker</td><td><code>fruits.push("peach")</code></td></tr>
+      <tr><td>Remove from the end</td><td>Take the last item out</td><td><code>fruits.pop()</code></td></tr>
+      <tr><td>Add to the front</td><td>Slide everyone down, insert at locker 0</td><td><code>fruits.unshift("mango")</code></td></tr>
+      <tr><td>Remove from the front</td><td>Take out locker 0, slide everyone up</td><td><code>fruits.shift()</code></td></tr>
+      <tr><td>Find length</td><td>Count how many lockers are filled</td><td><code>fruits.length</code></td></tr>
+    </table>
+    <p style="margin-top:12px; font-size:13.5px; color:var(--muted);">
+      Adding or removing at the <em>end</em> is quick, but at the <em>front</em> every other item has to shuffle down one locker — more work as the array grows.
+    </p>
+
+    <div class="recap">
+      <h3>Recap before we build anything</h3>
+      <p>Data structures organize information • memory stores everything at numbered addresses • Big O describes how speed changes as data grows • arrays are ordered, zero-indexed lockers. Next up in class: putting arrays to work, and building our first algorithm together.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  DATA STRUCTURES & ALGORITHMS 
+</footer>
+
+</body>
+</html>
