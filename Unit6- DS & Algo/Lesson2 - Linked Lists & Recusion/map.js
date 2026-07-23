@@ -15,10 +15,10 @@ console.log(hashMap.get(1));
 // Checking if a key exists
 console.log(hashMap.has('age')); // Output: true
 
-// Deleting a key
+// // Deleting a key
 hashMap.delete('city');
 
-// Getting size
+// // Getting size
 console.log(hashMap.size); // Output: 4
 
 // Iterating over keys and values

@@ -97,15 +97,15 @@ let list = new LinkedList();
 list.append(10);
 list.append(20);
 list.append(30);
-list.printList(); // Output: 10 → 20 → 30 → null
+//list.printList(); // Output: 10 → 20 → 30 → null
 
- list.prepend(5);
- list.printList(); // Output: 5 → 10 → 20 → 30 → null
+list.prepend(5);
+//list.printList(); // Output: 5 → 10 → 20 → 30 → null
 
- list.delete(20);
- list.printList(); // Output: 5 → 10 → 30 → null
+list.delete(20);
+//list.printList(); // Output: 5 → 10 → 30 → null
 
-console.log(list.find(10)); // Output: Node { value: 10, next: Node { value: 30, next: null } }
+//console.log(list.find(10)); // Output: Node { value: 10, next: Node { value: 30, next: null } }
 
 list.reverse();
 list.printList(); // Output: 30 → 10 → 5 → null

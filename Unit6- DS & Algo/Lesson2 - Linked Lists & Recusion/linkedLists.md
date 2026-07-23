@@ -48,4 +48,4 @@ JavaScript does not provide a built-in **Linked List** because:
 ❌ **Slower Access** - O(n) search compared to O(1) for indexed array access.
 
 ## **Use Cases of Linked Lists**
-- **Undo/Redo Functionality** (e.g., text editors)
+- Browser's back and forward history (each page is like a node for the browser)
