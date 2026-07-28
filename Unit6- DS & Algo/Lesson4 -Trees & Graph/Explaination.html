@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trees, Graphs, BFS/DFS & Dijkstra — JavaScript</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #26313C;
+    --muted: #6B7684;
+    --paper: #FFFFFF;
+    --panel: #F6F7F8;
+    --line: #E4E7EA;
+    --accent: #4C6EF5;
+    --accent-soft: #EEF1FE;
+    --green: #2F9E60;
+    --green-soft: #E8F6EE;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    line-height:1.65;
+    font-size:16px;
+  }
+  code, .mono{ font-family:'IBM Plex Mono', monospace; font-size:0.92em; }
+  .wrap{max-width:760px; margin:0 auto; padding:0 24px;}
+
+  header.top{
+    padding: 56px 0 36px;
+    border-bottom: 1px solid var(--line);
+  }
+  header.top .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color: var(--muted);
+  }
+  header.top h1{
+    font-size: clamp(30px, 5vw, 40px);
+    margin: 10px 0 14px;
+    font-weight:700;
+  }
+  header.top p.sub{
+    font-size:16.5px;
+    color: var(--muted);
+    max-width:580px;
+    margin:0;
+  }
+
+  section{padding: 44px 0;}
+  section + section{border-top: 1px solid var(--line);}
+
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px; text-transform:uppercase; letter-spacing:0.06em;
+    color: var(--accent);
+    margin:0 0 8px;
+  }
+  h2.title{
+    font-size: 23px;
+    margin:0 0 10px;
+    font-weight:700;
+  }
+  h3.sub-title{ font-size:16.5px; margin-top:30px; }
+  .lede{
+    font-size:16px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  p{margin: 0 0 14px;}
+
+  .note{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size:15px;
+  }
+  .note .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px; text-transform:uppercase; letter-spacing:0.06em;
+    color: var(--muted);
+    display:block; margin-bottom:6px;
+  }
+
+  .grid2{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    align-items:center;
+  }
+  @media (max-width: 700px){ .grid2{grid-template-columns: 1fr;} }
+
+  svg{max-width:100%; height:auto; display:block;}
+
+  .box-list{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap:12px; margin-top:20px;
+  }
+  .box-item{
+    border:1px solid var(--line); border-radius:8px;
+    padding:14px 16px;
+  }
+  .box-item h4{margin:0 0 4px; font-size:14.5px; font-weight:600;}
+  .box-item p{margin:0; font-size:13.5px; color:var(--muted);}
+
+  table.op-table{
+    width:100%; border-collapse: collapse; margin-top:16px;
+    font-size:14.5px;
+  }
+  table.op-table th, table.op-table td{
+    text-align:left; padding:10px 14px; border-bottom:1px solid var(--line);
+  }
+  table.op-table th{
+    color: var(--muted);
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px;
+    text-transform:uppercase; letter-spacing:0.05em; font-weight:500;
+  }
+  table.op-table td code{
+    background: var(--panel); padding:2px 6px; border-radius:4px;
+  }
+
+  pre.code{
+    background: var(--panel); border:1px solid var(--line);
+    color: var(--ink); padding:14px 16px; border-radius:8px;
+    font-size:13px; overflow-x:auto; margin: 16px 0;
+    font-family:'IBM Plex Mono', monospace; line-height:1.55;
+  }
+
+  .recap{
+    background: var(--accent-soft);
+    border-radius: 8px; padding: 20px 22px; margin-top:28px;
+    font-size:14.5px;
+  }
+  .recap h3{margin-top:0; font-size:15.5px;}
+  .recap p{color: var(--ink); opacity:0.85; margin-bottom:0;}
+
+  footer{
+    text-align:center; padding: 28px 0; font-size:12.5px;
+    color: var(--muted);
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  .term-grid{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap:12px; margin-top:20px;
+  }
+  .term-card{
+    border:1px solid var(--line); border-radius:8px;
+    padding:16px 18px;
+    background: var(--paper);
+  }
+  .term-card .term{
+    font-weight:700; font-size:15px; margin-bottom:6px;
+  }
+  .term-card p{margin:0; font-size:13.5px; color:var(--muted);}
+
+  .node-label{font-family:'IBM Plex Mono', monospace;}
+
+  .step-list{ margin:20px 0; padding:0; list-style:none; }
+  .step-list li{
+    display:grid; grid-template-columns: 28px 1fr; gap:12px;
+    margin-bottom:12px; font-size:14.5px;
+  }
+  .step-num{
+    width:26px; height:26px; border-radius:50%;
+    background: var(--accent); color:white;
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">Lesson 4 — Data Structures & Algorithms in JavaScript</span>
+    <h1>Trees, Graphs & Finding Your Way Around</h1>
+    <p class="sub">Quick recap: arrays are numbered rows, linked lists are chains of pointers, dictionaries look things up by key. Today's structures are different — they let one item connect to <em>several</em> others, not just the next one in line.</p>
+  </div>
+</header>
+
+<section id="trees">
+  <div class="wrap">
+    <p class="kicker">01 — Trees</p>
+    <h2 class="title">A structure that branches</h2>
+    <p class="lede">A <strong>tree</strong> is a data structure made of nodes, where each node can point to several "child" nodes below it. Every node has exactly one parent (except the very top one), and nothing ever loops back on itself.</p>
+
+    <div class="note">
+      <span class="label">Think of it like...</span>
+      A family tree, or the folder structure on your computer. One folder can contain several subfolders, each of those can contain more subfolders, and so on. You never find a folder that's somehow its own grandparent — trees only branch outward and downward.
+    </div>
+
+    <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+      <g class="node-label" font-size="14">
+        <line x1="200" y1="35" x2="120" y2="90" stroke="#C7CCD1"/>
+        <line x1="200" y1="35" x2="280" y2="90" stroke="#C7CCD1"/>
+        <line x1="120" y1="105" x2="70" y2="160" stroke="#C7CCD1"/>
+        <line x1="120" y1="105" x2="170" y2="160" stroke="#C7CCD1"/>
+        <line x1="280" y1="105" x2="230" y2="160" stroke="#C7CCD1"/>
+        <line x1="280" y1="105" x2="330" y2="160" stroke="#C7CCD1"/>
+
+        <circle cx="200" cy="25" r="18" fill="#EEF1FE" stroke="#4C6EF5"/>
+        <text x="200" y="30" text-anchor="middle" fill="#26313C">A</text>
+
+        <circle cx="120" cy="95" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="120" y="100" text-anchor="middle" fill="#26313C">B</text>
+        <circle cx="280" cy="95" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="280" y="100" text-anchor="middle" fill="#26313C">C</text>
+
+        <circle cx="70" cy="170" r="14" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="70" y="174" text-anchor="middle" fill="#26313C" font-size="12">D</text>
+        <circle cx="170" cy="170" r="14" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="170" y="174" text-anchor="middle" fill="#26313C" font-size="12">E</text>
+        <circle cx="230" cy="170" r="14" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="230" y="174" text-anchor="middle" fill="#26313C" font-size="12">F</text>
+        <circle cx="330" cy="170" r="14" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="330" y="174" text-anchor="middle" fill="#26313C" font-size="12">G</text>
+
+        <text x="200" y="14" text-anchor="middle" fill="#6B7684" font-size="11">root</text>
+      </g>
+    </svg>
+
+    <p style="font-size:13.5px; color:var(--muted); text-align:center; margin-top:-6px;">A is the root. D, E, F, G have no children, so they're called leaves.</p>
+
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="term">Root</div>
+        <p>The single node at the very top. Every tree has exactly one.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Parent / Child</div>
+        <p>A node directly above another is its parent; the one below is the child.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Leaf</div>
+        <p>A node with no children — the very end of a branch.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Depth</div>
+        <p>How many steps a node is <em>from the root</em>. The root's depth is 0.</p>
+      </div>
+      <div class="term-card">
+        <div class="term">Height</div>
+        <p>How many steps a node is <em>from its furthest leaf</em> below it.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">A special kind: the Binary Search Tree</h3>
+    <p>A <strong>binary tree</strong> is a tree where every node has at most two children — usually called "left" and "right." A <strong>Binary Search Tree (BST)</strong> adds one rule that makes searching fast: everything smaller than a node goes to its left, everything equal or bigger goes to its right. Follow that rule consistently, and you can find any value quickly by comparing and stepping left or right — similar to how you'd guess a number by narrowing "higher or lower" each time.</p>
+
+    <h3 class="sub-title">Where you already see trees</h3>
+    <div class="box-list">
+      <div class="box-item">
+        <h4>File systems</h4>
+        <p>Folders inside folders inside folders — a tree, from root drive down.</p>
+      </div>
+      <div class="box-item">
+        <h4>Web pages</h4>
+        <p>The HTML DOM is a tree: a page contains sections, which contain paragraphs, which contain words.</p>
+      </div>
+      <div class="box-item">
+        <h4>Fast lookups</h4>
+        <p>BSTs power quick searching, similar in spirit to the dictionaries we covered last class.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="graphs">
+  <div class="wrap">
+    <p class="kicker">02 — Graphs</p>
+    <h2 class="title">What if connections don't have to branch neatly?</h2>
+    <p class="lede">A <strong>graph</strong> is a more general version of a tree. It's just a set of <strong>nodes</strong> (also called <strong>vertices</strong>) connected by <strong>edges</strong> — but there's no root, no strict parent-child rule, and connections can loop back around.</p>
+
+    <div class="note">
+      <span class="label">Think of it like...</span>
+      Your friend group on social media. There's no "top" friend everyone descends from. People are just connected to each other, sometimes in circles — your friend's friend might also be your own friend directly.
+    </div>
+
+    <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+      <g class="node-label" font-size="14">
+        <line x1="70" y1="40" x2="230" y2="40" stroke="#C7CCD1"/>
+        <line x1="70" y1="40" x2="70" y2="140" stroke="#C7CCD1"/>
+        <line x1="230" y1="40" x2="230" y2="140" stroke="#C7CCD1"/>
+        <line x1="70" y1="140" x2="230" y2="140" stroke="#C7CCD1"/>
+        <line x1="230" y1="140" x2="280" y2="140" stroke="#C7CCD1"/>
+
+        <circle cx="70" cy="40" r="16" fill="#EEF1FE" stroke="#4C6EF5"/>
+        <text x="70" y="45" text-anchor="middle" fill="#26313C">A</text>
+        <circle cx="230" cy="40" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="230" y="45" text-anchor="middle" fill="#26313C">B</text>
+        <circle cx="70" cy="140" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="70" y="145" text-anchor="middle" fill="#26313C">C</text>
+        <circle cx="230" cy="140" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="230" y="145" text-anchor="middle" fill="#26313C">D</text>
+        <circle cx="280" cy="140" r="14" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="280" y="145" text-anchor="middle" fill="#26313C" font-size="12">E</text>
+      </g>
+    </svg>
+    <p style="font-size:13.5px; color:var(--muted); text-align:center; margin-top:-6px;">A connects to B and C. C connects back to A and to D. Notice the loop A–B–D–C–A.</p>
+
+    <h3 class="sub-title">Directed vs. undirected</h3>
+    <table class="op-table">
+      <tr><th>Type</th><th>Meaning</th><th>Real example</th></tr>
+      <tr><td>Undirected</td><td>Connections go both ways</td><td>Facebook friends — if you're my friend, I'm yours</td></tr>
+      <tr><td>Directed</td><td>Connections point one way only</td><td>Instagram follows — you can follow someone who doesn't follow back</td></tr>
+    </table>
+
+    <h3 class="sub-title">How does JavaScript store a graph?</h3>
+    <p>The most common way is an <strong>adjacency list</strong> — really just a dictionary where each key is a node, and its value is the list of nodes it connects to. It reads almost like a sentence: "A connects to B and C."</p>
+    <div class="note">
+      <span class="label">In plain terms</span>
+      <code>{ A: ["B", "C"], B: ["A", "D"], C: ["A", "D"], D: ["B", "C"] }</code> — each node lists its own neighbors, nothing more.
+    </div>
+
+    <h3 class="sub-title">Where you already see graphs</h3>
+    <div class="box-list">
+      <div class="box-item">
+        <h4>Maps & navigation</h4>
+        <p>Intersections are nodes, roads are edges — GPS apps search this graph for routes.</p>
+      </div>
+      <div class="box-item">
+        <h4>Social networks</h4>
+        <p>People are nodes, friendships or follows are edges.</p>
+      </div>
+      <div class="box-item">
+        <h4>The internet</h4>
+        <p>Web pages are nodes, links between them are edges — this is how search engines crawl the web.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="traversal">
+  <div class="wrap">
+    <p class="kicker">03 — BFS & DFS</p>
+    <h2 class="title">Visiting every node — but in what order?</h2>
+    <p class="lede">"Traversal" just means visiting every node in a tree or graph, one at a time. There are two classic strategies, and they feel very different even though they visit the exact same nodes.</p>
+
+    <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+      <g class="node-label" font-size="13">
+        <line x1="150" y1="30" x2="70" y2="90" stroke="#C7CCD1"/>
+        <line x1="150" y1="30" x2="230" y2="90" stroke="#C7CCD1"/>
+        <line x1="70" y1="100" x2="35" y2="155" stroke="#C7CCD1"/>
+        <line x1="70" y1="100" x2="105" y2="155" stroke="#C7CCD1"/>
+        <line x1="230" y1="100" x2="230" y2="155" stroke="#C7CCD1"/>
+
+        <circle cx="150" cy="20" r="17" fill="#EEF1FE" stroke="#4C6EF5"/>
+        <text x="150" y="25" text-anchor="middle" fill="#26313C">A</text>
+        <circle cx="70" cy="90" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="70" y="95" text-anchor="middle" fill="#26313C">B</text>
+        <circle cx="230" cy="90" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="230" y="95" text-anchor="middle" fill="#26313C">C</text>
+        <circle cx="35" cy="165" r="14" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="35" y="169" text-anchor="middle" fill="#26313C" font-size="11">D</text>
+        <circle cx="105" cy="165" r="14" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="105" y="169" text-anchor="middle" fill="#26313C" font-size="11">E</text>
+        <circle cx="230" cy="165" r="14" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="230" y="169" text-anchor="middle" fill="#26313C" font-size="11">F</text>
+      </g>
+    </svg>
+    <p style="font-size:13.5px; color:var(--muted); text-align:center; margin-top:-6px;">Our example graph for both walk-throughs below — A connects to B and C; B connects to D and E; C connects to F.</p>
+
+    <div class="grid2" style="margin-top:24px; align-items:start;">
+      <div>
+        <h3 class="sub-title" style="margin-top:0;">Breadth-First Search (BFS)</h3>
+        <p style="font-size:14.5px;">Visit all of A's neighbors first, <em>then</em> their neighbors, spreading outward one full ring at a time — like ripples in a pond.</p>
+        <div class="note" style="margin-top:12px;">
+          <span class="label">Order visited</span>
+          A → B → C → D → E → F
+        </div>
+        <p style="font-size:13.5px; color:var(--muted);">BFS uses a <strong>queue</strong> (first in, first out) — the same structure we'd use for a line at the movies. It checks the oldest waiting node first.</p>
+      </div>
+      <div>
+        <h3 class="sub-title" style="margin-top:0;">Depth-First Search (DFS)</h3>
+        <p style="font-size:14.5px;">Pick one path and follow it as far as it goes, <em>then</em> backtrack and try the next path — like exploring a cave tunnel to its end before trying a different tunnel.</p>
+        <div class="note" style="margin-top:12px;">
+          <span class="label">Order visited</span>
+          A → B → D → E → C → F
+        </div>
+        <p style="font-size:13.5px; color:var(--muted);">DFS naturally uses a <strong>stack</strong> (last in, first out) — or recursion</p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">When would you use each?</h3>
+    <table class="op-table">
+      <tr><th>Goal</th><th>Better choice</th><th>Why</th></tr>
+      <tr><td>Shortest path (unweighted)</td><td>BFS</td><td>It explores ring by ring, so the first time it reaches a node is guaranteed to be the shortest way there.</td></tr>
+      <tr><td>Explore everything, don't care about order</td><td>DFS</td><td>Usually simpler to write with recursion, uses less memory for deep, narrow graphs.</td></tr>
+      <tr><td>"Is there any path from A to Z?"</td><td>Either</td><td>Both will find it eventually — they just explore in a different order.</td></tr>
+    </table>
+    <div class="wrap box-item">
+      <p>Unweighted graph: every edge (connection) is treated as costing exactly 1 step, no matter what it actually represents. It doesn't matter if the connection is a short hop or a long one — in an unweighted graph, we just don't track that difference at all. All that matters is how many connections you crossed. </p>
+
+    <p>
+      Weighted graph: every edge has a number attached — a cost, distance, time, or price — and that number matters. Some edges are "cheap" to cross, others are "expensive.
+    </p>
+    </div>
+  </div>
+</section>
+
+<section id="dijkstra">
+  <div class="wrap">
+    <p class="kicker">04 — Additional Algorithm (Dijkstra's)</p>
+    <h2 class="title">What if some paths cost more than others?</h2>
+    <p class="lede">BFS finds the shortest path by counting steps — it assumes every edge is equally "expensive." But real roads have different distances, and real flights have different prices. <strong>Dijkstra's algorithm</strong> finds the cheapest total path when edges have different costs, or <strong>weights</strong>.</p>
+
+    <div class="note">
+      <span class="label">Think of it like...</span>
+      Planning a road trip where every road has a toll. The straightest-looking road on the map isn't always the cheapest — sometimes a longer, roundabout route with cheaper tolls costs less overall. Dijkstra's algorithm is a careful way of comparing every option so you never overpay.
+    </div>
+
+    <h3 class="sub-title">Where it's actually used</h3>
+    <div class="box-list">
+      <div class="box-item">
+        <h4>GPS & maps</h4>
+        <p>Finding the fastest route when roads have different lengths and speed limits.</p>
+      </div>
+      <div class="box-item">
+        <h4>Network routing</h4>
+        <p>Sending data through the internet via the least congested, fastest path.</p>
+      </div>
+      <div class="box-item">
+        <h4>Flight & travel search</h4>
+        <p>Finding the cheapest combination of connecting flights or routes.</p>
+      </div>
+      <div class="box-item">
+        <h4>Games</h4>
+        <p>Pathfinding for characters when some terrain is slower to cross than others.</p>
+      </div>
+    </div>
+
+    <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
+      <g class="node-label" font-size="13">
+        <line x1="60" y1="40" x2="260" y2="40" stroke="#C7CCD1"/>
+        <text x="160" y="32" text-anchor="middle" fill="#6B7684" font-size="12">4</text>
+
+        <line x1="60" y1="40" x2="160" y2="130" stroke="#C7CCD1"/>
+        <text x="95" y="90" text-anchor="middle" fill="#6B7684" font-size="12">2</text>
+
+        <line x1="160" y1="130" x2="260" y2="40" stroke="#C7CCD1"/>
+        <text x="225" y="90" text-anchor="middle" fill="#6B7684" font-size="12">1</text>
+
+        <line x1="260" y1="40" x2="280" y2="140" stroke="#C7CCD1"/>
+        <text x="285" y="90" text-anchor="middle" fill="#6B7684" font-size="12">5</text>
+
+        <line x1="160" y1="130" x2="280" y2="140" stroke="#C7CCD1"/>
+        <text x="220" y="150" text-anchor="middle" fill="#6B7684" font-size="12">8</text>
+
+        <circle cx="60" cy="40" r="17" fill="#EEF1FE" stroke="#4C6EF5"/>
+        <text x="60" y="45" text-anchor="middle" fill="#26313C">A</text>
+        <circle cx="260" cy="40" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="260" y="45" text-anchor="middle" fill="#26313C">B</text>
+        <circle cx="160" cy="130" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="160" y="135" text-anchor="middle" fill="#26313C">C</text>
+        <circle cx="280" cy="140" r="16" fill="#F6F7F8" stroke="#C7CCD1"/>
+        <text x="280" y="145" text-anchor="middle" fill="#26313C">D</text>
+      </g>
+    </svg>
+    <p style="font-size:13.5px; color:var(--muted); text-align:center; margin-top:-6px;">The numbers on each edge are the "cost" to travel it. We want the cheapest total path from A to D.</p>
+
+    <h3 class="sub-title">The basic idea</h3>
+    <ul class="step-list">
+      <li><span class="step-num">1</span><span>Give the starting node a cost of 0, and every other node a cost of "unknown / infinity" for now.</span></li>
+      <li><span class="step-num">2</span><span>Look at the cheapest node we haven't finished with yet, and check its neighbors.</span></li>
+      <li><span class="step-num">3</span><span>For each neighbor, see if going through the current node is <em>cheaper</em> than what we had recorded before. If so, update it.</span></li>
+      <li><span class="step-num">4</span><span>Mark the current node as finished, and repeat from step 2 with the next cheapest unfinished node.</span></li>
+      <li><span class="step-num">5</span><span>Stop once every node is finished — you're left with the cheapest cost to reach each one.</span></li>
+    </ul>
+
+    <h3 class="sub-title">Walking through our example</h3>
+    <p style="font-size:14.5px;">Starting at A, using the costs in the diagram above:</p>
+    <table class="op-table">
+      <tr><th>Step</th><th>Visit</th><th>What updates</th><th>Best known costs so far</th></tr>
+      <tr><td>1</td><td>A</td><td>B becomes 4, C becomes 2</td><td>A=0, B=4, C=2, D=∞</td></tr>
+      <tr><td>2</td><td>C (cheapest so far)</td><td>Going A→C→B costs 3, cheaper than 4 — update B. Going A→C→D costs 10 — update D.</td><td>A=0, B=3, C=2, D=10</td></tr>
+      <tr><td>3</td><td>B (cheapest unfinished)</td><td>Going A→C→B→D costs 8, cheaper than 10 — update D.</td><td>A=0, B=3, C=2, D=8</td></tr>
+      <tr><td>4</td><td>D</td><td>No cheaper option left.</td><td>A=0, B=3, C=2, D=8</td></tr>
+    </table>
+    <p style="font-size:13.5px; color:var(--muted); margin-top:10px;">Final answer: the cheapest path from A to D costs <strong>8</strong>, going A → C → B → D — even though the direct-looking A → B → D route would have cost 9. Comparing every option is exactly what makes this algorithm reliable.</p>
+
+    <h3 class="sub-title">The code</h3>
+    <p>Here's the same five steps as actual JavaScript. The graph is stored as an adjacency list where each neighbor also has a cost attached:</p>
+    <pre class="code">// weighted graph — each neighbor has a cost attached
+const weightedGraph = {
+  A: { B: 4, C: 2 },
+  B: { A: 4, C: 1, D: 5 },
+  C: { A: 2, B: 1, D: 8 },
+  D: { B: 5, C: 8 }
+};
+
+function dijkstra(graph, start) {
+  let distances = {};   // cheapest known distance to each node
+  let visited = new Set();
+  let previous = {};    // how we reached each node, for rebuilding the path
+
+  // Step 1: start = 0, everything else = infinity
+  for (let node in graph) {
+    distances[node] = Infinity;
+    previous[node] = null;
+  }
+  distances[start] = 0;
+
+  while (visited.size < Object.keys(graph).length) {
+    // Step 2: pick the cheapest unvisited node
+    let currentNode = null;
+    let smallestDistance = Infinity;
+    for (let node in distances) {
+      if (!visited.has(node) && distances[node] < smallestDistance) {
+        smallestDistance = distances[node];
+        currentNode = node;
+      }
+    }
+    if (currentNode === null) break; // nothing left to reach
+
+    visited.add(currentNode);
+
+    // Step 3: check if going through currentNode is cheaper for its neighbors
+    for (let neighbor in graph[currentNode]) {
+      let newDistance = distances[currentNode] + graph[currentNode][neighbor];
+      if (newDistance < distances[neighbor]) {
+        distances[neighbor] = newDistance;
+        previous[neighbor] = currentNode;
+      }
+    }
+  }
+
+  return { distances, previous };
+}
+
+const result = dijkstra(weightedGraph, 'A');
+console.log(result.distances);
+// { A: 0, B: 3, C: 2, D: 8 }  ← matches the table above</pre>
+
+
+    <div class="note">
+      <span class="label">How this connects to BFS</span>
+      If every edge cost exactly 1, Dijkstra's algorithm would behave exactly like BFS. BFS is really just Dijkstra's algorithm for the special case where nothing costs more than anything else.
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  DATA STRUCTURES & ALGORITHMS — LESSON 4
+</footer>
+
+</body>
+</html>

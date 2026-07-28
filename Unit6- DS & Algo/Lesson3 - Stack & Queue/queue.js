@@ -26,18 +26,18 @@ export class Queue {
 }
 
 // Example usage:
-const queue = new Queue();
-queue.enqueue(1);
-queue.enqueue(2);
-queue.enqueue(3);
-console.log(queue.dequeue()); // Output: 1
+// const queue = new Queue();
+// queue.enqueue(1);
+// queue.enqueue(2);
+// queue.enqueue(3);
+// console.log(queue); // Output: 1
+// console.log(queue.size()); // Output: 1
 
 // practice Algo : Find first non repeating character in a string O(n)
 
 function firstNonRepeatingChar(string) {
 
   const queue = new Queue();
-
   // Object to store how many times each character has appeared.
   const frequencyCount = {};
 
@@ -45,7 +45,7 @@ function firstNonRepeatingChar(string) {
   for (let i = 0; i < string.length; i++) {
 
      // Get the current character.
-    const char = string[i];
+    const char = string[i];  // s
 
     // Increase the count for this character.
     // If the character hasn't been seen before,

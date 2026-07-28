@@ -20,29 +20,28 @@ function quickSort(arr) {
             middle.push(el); // Elements equal to pivot stay in the middle
         }
     }
-
     // Recursively apply Quick Sort to left and right subarrays
     return [...quickSort(left), ...middle, ...quickSort(right)]; 
 }
 
 // Example usage
-const array = [5, 3, 8, 4, 2, 7, 1, 10];
-console.log(quickSort(array)); // Output: [1, 2, 3, 4, 5, 7, 8, 10]
+// const array = [5, 3, 8, 4, 2, 7, 1, 10];
+// console.log(quickSort(array)); // Output: [1, 2, 3, 4, 5, 7, 8, 10]
 
 
 //Practice question: Develop a recursive function that calculates the result of raising a number 'n' to the power 'x'. Ex: calculate 5^6 --> n^x
 
-function calculate(n, x) {
-    // Base case: anything raised to the power of 0 is 1
-    if (x === 0) {
-        return 1;
-    }
+// function calculate(n, x) {
+//     // Base case: anything raised to the power of 0 is 1
+//     if (x === 0) {
+//         return 1;
+//     }
 
-    // Recursive case: multiply n by the result of the function with x-1
-    return n * calculate(n, x - 1);
-}
+//     // Recursive case: multiply n by the result of the function with x-1
+//     return n * calculate(n, x - 1);
+// }
 
-console.log(calculate(5, 6)); // Output: 15625
+// console.log(calculate(5, 6)); // Output: 15625
 
 // Algorithm to print Fibonacci series up to nth number.  -> 8th poistion
 // Fibonacci series is a sequence of numbers where each number is the sum of the two numbers before it. The sequence starts with 0 and 1, and continues as 1, 2, 3, 5, 8, 13, 21, and so on

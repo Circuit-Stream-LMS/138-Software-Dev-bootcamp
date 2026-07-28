@@ -26,24 +26,25 @@ export class Stack {
 }
 
 // Example usage:
-const stack = new Stack();
-stack.push(1);
-stack.push(2);
-stack.push(3);
-console.log(stack.pop()); // Output: 3
+// const stack = new Stack();
+// stack.push(1);
+// stack.push(2);
+// stack.push(3);
+// console.log(stack);
+// console.log(stack.size()); // Output: 3
 
 // Practice Algo : Reverse a string O(n)
+// you have to reverse a string  "hello" => "olleh"
 
-function reverseString(string) {
+function reverseString(str) {
   const stack = new Stack();
 
   // Push all characters into the stack
-  for (let i = 0; i < string.length; i++) {
-    stack.push(string[i]);
+  for (let i = 0; i < str.length; i++) {
+    stack.push(str[i]);
   }
 
   let reversedString = "";
-
   // Pop characters from the stack and build the reversed string
   while (!stack.isEmpty()) {
     reversedString += stack.pop();
@@ -52,5 +53,5 @@ function reverseString(string) {
   return reversedString;
 }
 
-// Example usage:
+// // Example usage:
 console.log(reverseString("hello")); // Output: "olleh"
