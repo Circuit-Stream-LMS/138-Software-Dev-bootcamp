@@ -45,7 +45,7 @@ function bfsShortestPath(adjacencyList, start, end) {
 
   // The QUEUE holds nodes waiting to be explored, in the order we found them.
   // We always look at the OLDEST node in the queue first (first in, first out)
-
+  let queue = [];
   // The VISITED set stops us from checking the same node twice, which would
   // waste time and could even cause an infinite loop if the graph has cycles.
   let visited = new Set();
