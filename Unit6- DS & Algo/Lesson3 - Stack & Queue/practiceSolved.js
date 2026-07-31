@@ -27,7 +27,7 @@ function isBalanced(input) {
   return stack.isEmpty();
 };
 
-console.log(isBalanced("({[]})"));
+//console.log(isBalanced("({[]})"));
 
 
 function processActions(actions) {
@@ -45,7 +45,7 @@ function processActions(actions) {
   return stack.items;
 };
 
-console.log(processActions(["type A", "type B", "UNDO", "type C"]));
+//console.log(processActions(["type A", "UNDO","type B", "type C"]));
 
 
 function processTasks(taskList) {
@@ -66,7 +66,7 @@ function processTasks(taskList) {
   return completed;
 };
 
-console.log(processTasks(["task1", "task2", "task3"]));
+//console.log(processTasks(["task2", "task1", "task3"]));
 
 
 function hotPotato(players, numPasses) {
@@ -93,4 +93,4 @@ function hotPotato(players, numPasses) {
   return queue.front();
 };
 
-console.log(hotPotato(["A", "B", "C", "D"], 3));
+console.log(hotPotato(["A", "B", "C", "D"], 2));
