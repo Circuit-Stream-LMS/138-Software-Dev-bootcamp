@@ -1,0 +1,1 @@
+** Use this folder by default to serve any static assets, this is optimized by vite

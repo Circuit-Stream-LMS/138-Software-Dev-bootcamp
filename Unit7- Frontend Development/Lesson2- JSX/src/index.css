@@ -1,0 +1,59 @@
+
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* App container */
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+/* Main menu container */
+.menu {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Category section */
+.category {
+  margin-bottom: 20px;
+}
+
+/* Category title */
+.category h2 {
+  background-color: #ff6347;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Menu item container */
+.menu-item {
+  padding: 10px;
+  text-align: left;
+}
+
+/* Menu item title */
+.menu-item h3 {
+  margin-bottom: 5px;
+}
+
+/* Item price styling */
+.price {
+  font-weight: bold;
+  color: #ff6347;
+  float: right;
+}
