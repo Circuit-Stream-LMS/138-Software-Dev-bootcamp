@@ -1,0 +1,123 @@
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Wrapper so the cart summary can sit above the centered app */
+.app-wrapper {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+/* Cart summary bar */
+.cart-summary {
+  background-color: #333;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* App container */
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* Main menu container */
+.menu {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Search bar */
+.search-bar {
+  width: 100%;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Category section */
+.category {
+  margin-bottom: 20px;
+}
+
+/* Category title */
+.category h2 {
+  background-color: #ff6347;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Menu item container */
+.menu-item {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+/* Clickable header row (toggles details) */
+.menu-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Menu item title */
+.menu-item h3 {
+  margin-bottom: 5px;
+}
+
+/* Item price styling */
+.price {
+  font-weight: bold;
+  color: #ff6347;
+}
+
+/* Description shown when expanded */
+.description {
+  margin-top: 8px;
+  color: #555;
+  font-size: 13px;
+}
+
+/* Quantity input + add to cart button row */
+.menu-item-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.menu-item-actions input {
+  width: 50px;
+  padding: 4px;
+}
+
+.menu-item-actions button {
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.menu-item-actions button:hover {
+  background-color: #e0543d;
+}

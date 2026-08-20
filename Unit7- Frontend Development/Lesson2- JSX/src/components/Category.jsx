@@ -2,12 +2,14 @@
 import MenuItem from "./MenuItem";
 
 // Functional component to display a category with its items
-const Category = ({ category }) => {
+const Category = ({ stuff }) => {
+  console.log(stuff);
+
   return (
     <div className="category">
-      <h2>{category.category}</h2>
+      <h2>{stuff.category}</h2>
       <div className="items">
-        {category.items.map((item) => (
+        {stuff.items.map((item) => (
           <MenuItem key={item.id} item={item} />
         ))}
       </div>
