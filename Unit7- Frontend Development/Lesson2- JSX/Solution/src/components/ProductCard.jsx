@@ -1,11 +1,11 @@
 // Displays one product using the props passed down from ProductList
-const ProductCard = ({ name, image, price, description }) => {
+const ProductCard = ({ product }) => {
   return (
     <div className="product-card">
-      <img src={image} alt={name} className="product-image" />
-      <h3>{name}</h3>
-      <p className="product-price">{price}</p>
-      <p className="product-description">{description}</p>
+      <img src={product.image} alt={product.name} className="product-image" />
+      <h3>{product.name}</h3>
+      <p className="product-price">{product.price}</p>
+      <p className="product-description">{product.description}</p>
     </div>
   );
 };

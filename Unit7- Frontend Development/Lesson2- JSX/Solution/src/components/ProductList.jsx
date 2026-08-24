@@ -32,10 +32,7 @@ const ProductList = () => {
         // key lets React tell each ProductCard apart in the list
         <ProductCard
           key={product.id}
-          name={product.name}
-          image={product.image}
-          price={product.price}
-          description={product.description}
+          product={product}
         />
       ))}
     </div>
