@@ -12,12 +12,13 @@ const App = () => {
     setToggleForm(!toggleForm);
   }
   return (
-    <>
-      <Event />
-      {/* <button onClick={handleClick}>Toggle Form</button>
-      {toggleForm ? <RegistrationForm/> : <RegistrationFormUncontrolled/>} */}
-      
-    </>
+      <>
+      {/* <Event /> */}
+      <button onClick={handleClick}>Toggle Form</button>
+
+      {/* conditionally rendering a react component */}
+      {toggleForm ? <RegistrationForm/> : <RegistrationFormUncontrolled/>}
+      </>
   );
 };
 

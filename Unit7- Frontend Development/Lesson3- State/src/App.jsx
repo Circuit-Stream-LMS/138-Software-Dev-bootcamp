@@ -44,6 +44,7 @@ const App = () => {
     <div className="app-wrapper">
       <div className="cart-summary">🛒 Count: {totalItems}</div>
       <div className="app">
+        {/* calling Menu component and passing a prop onAddToCart  */}
         <Menu onAddToCart={addToCart} />
       </div>
     </div>
