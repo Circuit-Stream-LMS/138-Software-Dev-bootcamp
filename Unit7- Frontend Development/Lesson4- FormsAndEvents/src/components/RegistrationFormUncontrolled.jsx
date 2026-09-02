@@ -26,7 +26,7 @@ const RegistrationFormUncontrolled = () => {
 
     // Gather form values from refs
     const formData = {
-      name: nameRef.current.value,
+      name: nameRef.current.value,  // get the current value from this ref 
       email: emailRef.current.value,
       password: passwordRef.current.value,
       role: roleRef.current.value,

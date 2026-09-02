@@ -16,7 +16,7 @@ const RegistrationForm = () => {
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [name]: value }); // hey, keep the existing fields, only change what changed as 
   };
 
   // Validate form fields
@@ -33,7 +33,9 @@ const RegistrationForm = () => {
     e.preventDefault();
     const validationErrors = validateForm();
     setErrors(validationErrors);
-
+    // i want to check if the length of keys in my object is 0 
+    // Object.keys gives you all the keys of the object you are using 
+    // Object.keys(validationErrors) = [].length = 0 {}
     if (Object.keys(validationErrors).length === 0) {
       setIsSubmitted(true);
     }
@@ -77,7 +79,7 @@ const RegistrationForm = () => {
         />
 
         {/* Dropdown for Role Selection */}
-        <div className="input-group">
+        <div className="input-group" >
           <label className="label">Role</label>
           <select
             name="role"
@@ -91,7 +93,7 @@ const RegistrationForm = () => {
           </select>
         </div>
 
-        <button type="submit" className="submit-btn">
+        <button type="submit" className="submit-btn" >
           Register
         </button>
       </form>
