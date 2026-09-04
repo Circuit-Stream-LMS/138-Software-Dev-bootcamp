@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 
 const App = () => {
   // navigation.state is "idle" | "loading" | "submitting"
-  const navigation = useNavigation();
+  const navigation = useNavigation(); 
 
   return (
     <>

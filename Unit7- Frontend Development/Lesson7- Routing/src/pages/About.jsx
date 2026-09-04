@@ -2,6 +2,7 @@ import { useLocation } from "react-router";
 
 const About = () => {
   const location = useLocation();
+  console.log(location)
   return (
     <div>
       <h1>About Page</h1>

@@ -3,7 +3,7 @@ import { counterReducer, initialState } from '../reducer/counterReducer';
 
 function Counter() {
   const [state, dispatch] = useReducer(counterReducer, initialState);
-
+  // const [stateVar, setStateVar] = useState(initialValue);
   return (
     <div style={{ textAlign: 'center', padding: '2rem' }}>
       <h2>Counter Example</h2>
@@ -17,3 +17,4 @@ function Counter() {
 }
 
 export default Counter;
+

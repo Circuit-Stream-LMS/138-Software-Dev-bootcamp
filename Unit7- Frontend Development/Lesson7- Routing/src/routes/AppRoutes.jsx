@@ -5,6 +5,7 @@ import About from "../pages/About";
 import Profile from "../pages/Profile";
 import NotFound from "../pages/NotFound";
 import { authMiddleware } from "../middleware/authMiddleware";
+import Contact from "../pages/Contact";
 
 // Mock "database"
 const mockUsers = {
@@ -14,7 +15,7 @@ const mockUsers = {
 
 // Simulates a real API call
 const profileLoader = async ({ params }) => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 500)); // to denote fecthing data from api
 
   const user = mockUsers[params.username];
 
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "about", element: <About /> },
+      { path: "contact", element: <Contact />},
       {
         path: "profile/:username",
         middleware: [authMiddleware],
