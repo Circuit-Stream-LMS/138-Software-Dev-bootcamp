@@ -9,11 +9,12 @@ function App() {
   return (
     <div className="app">
       <h1 className="heading">Pokémon List</h1>
-
+      {/* conditional rendering */}
       {loading && <p className="info">Loading...</p>}
       {error && <p className="error">Error: {error}</p>}
 
       <div className="grid">
+        {/* optional chaining syntax  */}
         {data?.map(pokemon => (
           <PokemonCardDetails key={pokemon.name} pokemon={pokemon} />
         ))}
