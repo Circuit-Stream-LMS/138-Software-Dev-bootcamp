@@ -4,7 +4,7 @@ const Cart = () => {
   // This page is the whole point of having CartContext: any component
   // can read/update the cart without it being passed down as props from
   // App -> Home -> ProductList -> ProductCard.
-  const { cart, removeFromCart } = useCart();
+  const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
 
   if (cart.length === 0) {
     return (
@@ -29,6 +29,11 @@ const Cart = () => {
               <p>${item.price.toFixed(2)}</p>
 
               {/* TODO: Add Quantity controls */}
+              <div className="quantity-controls">
+                <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                <span>{item.quantity}</span>
+                <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+              </div>
             </div>
 
             <button className="remove-btn" onClick={() => removeFromCart(item.id)}>
@@ -40,6 +45,8 @@ const Cart = () => {
 
       <div className="cart-summary">
         {/* TODO: Show total and clear cart button */}
+        <p>Total: ${cartTotal.toFixed(2)}</p>
+        <button onClick={clearCart}>Clear Cart</button>
       </div>
     </div>
   );
