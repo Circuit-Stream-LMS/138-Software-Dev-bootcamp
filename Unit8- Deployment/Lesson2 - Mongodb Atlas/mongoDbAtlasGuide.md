@@ -13,6 +13,8 @@ This guide explains how to move your Node.js + Express app from using local Mong
 
 ---
 
+## We will use Unit-3 backed development lesson 6 as an example for for end to end deployment
+
 ## Step 1: Create a MongoDB Atlas Cluster
 
 1. Go to [https://cloud.mongodb.com](https://cloud.mongodb.com)
