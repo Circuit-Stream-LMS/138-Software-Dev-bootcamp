@@ -24,7 +24,6 @@ Before we begin, ensure you have the following:
 
    export default defineConfig({
      plugins: [react()],
-     base: '/', // Make sure this is correct for your use case
    });
    ```
 
