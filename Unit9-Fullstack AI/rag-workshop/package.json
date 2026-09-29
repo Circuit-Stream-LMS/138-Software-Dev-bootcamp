@@ -1,0 +1,13 @@
+{
+  "name": "rag-workshop",
+  "type": "module",
+  "scripts": {
+    "ask": "node src/ask.js",
+    "serve": "node src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "@google/genai": "^2.24.0"
+  }
+}

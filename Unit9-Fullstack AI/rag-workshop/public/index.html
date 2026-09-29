@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Chat with your docs</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    .msg { margin: .6rem 0; padding: .6rem .9rem; border-radius: 8px; }
+    .user { background: #e8f0fe; }
+    .bot { background: #f1f3f4; }
+    details { font-size: .85rem; color: #555; margin-top: .4rem; }
+    input[type=text] { width: 75%; padding: .5rem; }
+  </style>
+</head>
+<body>
+  <h2>Chat with your docs</h2>
+  <p>Upload a .txt or .md file (optional): <input type="file" id="file" accept=".txt,.md" /> <span id="status"></span></p>
+
+  <div id="log"></div>
+  <input type="text" id="chat-input" placeholder="Ask a question..." autocomplete="off" />
+  <button id="send">Send</button>
+
+  <script>
+    const log = document.getElementById('log');
+
+    // Show a message in the chat. Using textContent keeps user text from being run as HTML.
+    function addMessage(cls, text) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + cls;
+      div.textContent = text;
+      log.appendChild(div);
+      return div;
+    }
+
+    // Upload: read the file in the browser, send its text to /api/ingest
+    document.getElementById('file').onchange = async (e) => {
+      const file = e.target.files[0];
+      const res = await fetch('/api/ingest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: file.name, text: await file.text() }),
+      });
+      const data = await res.json();
+      document.getElementById('status').textContent = `${data.chunks} chunks added`;
+    };
+
+    // Chat: send the question to /api/chat, show the answer and its sources
+    async function send() {
+      const input = document.getElementById('chat-input');
+      const question = input.value.trim();
+      if (!question) return;
+      input.value = '';
+      addMessage('user', question);
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      });
+      const data = await res.json();
+
+      const msg = addMessage('bot', data.answer);
+      const details = document.createElement('details');
+      details.innerHTML = '<summary>Sources</summary>';
+      data.sources.forEach((s) => {
+        const p = document.createElement('p');
+        p.textContent = `${s.id} (score ${s.score.toFixed(2)}): ${s.text}`;
+        details.appendChild(p);
+      });
+      msg.appendChild(details);
+    }
+
+    document.getElementById('send').onclick = send;
+  </script>
+</body>
+</html>
