@@ -18,8 +18,8 @@ const CHAT_MODEL = 'gemini-flash-latest';
 //
 // `overlap` matters because a plain slice can cut a sentence in half at the
 // boundary. Sliding the window forward by (size - overlap) instead of by
-// `size` means each new chunk repeats the tail of the previous one, so a
-// sentence split at an edge still appears whole in at least one chunk.
+// `size` means each new chunk repeats the tail of the previous one, so a.  each new chunk repeats the tail of the previous one,
+// sentence split at an edge still appears whole in at least one chunk.    
 export function chunkText(text, size = 150, overlap = 30) {
   const chunks = [];
   for (let start = 0; start < text.length; start += size - overlap) {
@@ -45,7 +45,7 @@ async function embed(texts) {
 // entry is one chunk plus the embedding we computed for it. In a real app
 // this would be a proper vector database so it can persist and scale to millions of chunks --
 // but the underlying idea (store text next to its embedding) is identical.
-const store = []; // { id, text, embedding }
+const store = []; // { id, text, embedding } [{id:1, "can achieve", "101.52.6587.21"}]
 
 // The full pre-processing pipeline for ONE document: chunk it, embed every
 // chunk, then push { id, text, embedding } triples into the store.

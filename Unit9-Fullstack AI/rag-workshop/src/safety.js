@@ -30,9 +30,7 @@ export function checkInput(question) {
 //     obeyed as a command (an "indirect" prompt injection).
 //  2. The model is told to use the exact REFUSAL sentence whenever the
 //     answer isn't in the context, or the question is off-topic (e.g.
-//     someone asking for unrelated coding help). This keeps refusals
-//     predictable and testable (see eval/run-eval.js's refusal checks).
-//  3. It's told never to reveal these rules, to make it a bit harder for a
+//     someone asking for unrelated coding help) //  3. It's told never to reveal these rules, to make it a bit harder for a
 //     user to extract and study the system prompt itself.
 export function systemPrompt(chunks) {
   const context = chunks.map((c) => `[${c.id}] ${c.text}`).join('\n\n');

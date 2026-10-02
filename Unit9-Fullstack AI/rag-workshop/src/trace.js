@@ -8,6 +8,7 @@
 // tracking, and alerting on top of it. Understanding this file means you
 // understand what those dashboards are actually showing you.
 export function startTrace(input) {
+  const start = Date.now();
   const spans = []; // every span recorded during this one trace, in order
 
   return {
@@ -20,5 +21,10 @@ export function startTrace(input) {
       spans.push({ name, ms: Date.now() - t, output });
       return output;
     },
-  };
-}
+    end(answer) {
+      const trace = { input, spans, answer, ms: Date.now() - start };
+      console.log(`\nTRACE  "${input}"  (${trace.ms}ms)`);
+      for (const span of spans) {
+        console.log(`  - ${span.name} (${span.ms}ms)  ${JSON.stringify(span.output).slice(0, 80)}`);
+  }
+}}};

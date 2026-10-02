@@ -1,4 +1,4 @@
-# RAG, Observability, Safety & Evals
+# RAG, Observability, Safety
 
 ## Why we're building this
 
