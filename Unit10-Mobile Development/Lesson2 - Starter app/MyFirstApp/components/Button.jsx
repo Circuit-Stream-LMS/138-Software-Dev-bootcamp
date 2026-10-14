@@ -1,18 +1,18 @@
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics'; // for adding haptic feedback on devices
 
 export default function Button({ title, onPress, disabled }) {
 
     // Handle button press with haptic feedback
     const handlePress = () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.light);
         onPress();
     };
 
     return (
-        <TouchableOpacity style={styles.button} onPress={handlePress} disabled={disabled}>
+        <Pressable style={styles.button} onPress={handlePress} disabled={disabled}>
             <Text style={styles.buttonText}>{title}</Text>
-        </TouchableOpacity>
+        </Pressable>
     );
 }
 

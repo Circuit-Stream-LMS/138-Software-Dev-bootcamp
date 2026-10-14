@@ -33,7 +33,7 @@ View - Basic container, similar to <div> in web.
 
 Text - For displaying text.
 
-TouchableOpacity - Touchable component for buttons.
+Pressable- Touchable component for buttons.
 
 Image - For displaying images.
 
