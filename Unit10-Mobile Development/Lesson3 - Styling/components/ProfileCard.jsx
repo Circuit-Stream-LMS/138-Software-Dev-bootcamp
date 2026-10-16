@@ -10,7 +10,7 @@ export default function ProfileCard({ name, bio, image, theme, index }) {
     <Animated.View
       // Runs once when the card first appears (on mount).
       // delay() offsets each card by 150 ms so they appear one after another.
-      entering={FadeInDown.delay(index * 150).duration(1000)}
+      entering={FadeInDown.delay(index * 150).duration(500)}
       // An array merges styles; later items override earlier ones.
       // Static styles come from StyleSheet, theme colors are applied dynamically.
       style={[

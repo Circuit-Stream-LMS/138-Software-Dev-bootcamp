@@ -12,8 +12,8 @@ export default function App() {
           {/* Automatically adjust status bar color based on background */}
           <StatusBar style="auto" />
           <Header title="Welcome to Expo" />
-          <HomeScreen />
-          {/* <ProfileScreen /> */}
+          {/* <HomeScreen /> */}
+          <ProfileScreen />
         </SafeAreaView>
       </SafeAreaProvider>
   );

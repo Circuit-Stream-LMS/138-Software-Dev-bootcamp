@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Lesson 5 - Expo Router",
+    "slug": "lesson5-expo-router",
+    "version": "1.0.0",
+    "scheme": "lesson5",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
