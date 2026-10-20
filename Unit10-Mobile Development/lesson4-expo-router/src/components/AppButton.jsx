@@ -1,7 +1,6 @@
 import { Pressable, StyleSheet, Text } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 
-
 export default function AppButton({
   title,
   onPress,
